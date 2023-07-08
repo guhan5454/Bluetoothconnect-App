@@ -9,11 +9,11 @@ import { faStop, faLeftLong, faRightLong, faCircleCheck } from '@fortawesome/fre
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 const BleManagerModule = NativeModules.BleManager;
 const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
-
+  n
 const App = () => {
 
   const [isConnected, setIsConnected] = useState({
-    'connection': false,
+    'connection': true,
     'bluetooth': false,
     'ble': false,
     'location': false,
@@ -98,7 +98,7 @@ const App = () => {
         // Failure code
         console.log(error);
         Alert.alert('Couldn\'t Connect', `${error}`, [
-          { text: 'OK', onPress: () => console.log('alert clossed') }
+          { text: 'OK', onPress: () => console.log('alert closed') }
         ]);
       });
   }
@@ -117,6 +117,9 @@ const App = () => {
       .catch((error) => {
         // Failure code
         console.log(error);
+        Alert.alert('Couldn\'t Disconnect', `${error}`, [
+          { text: 'OK', onPress: () => console.log('alert closed') }
+        ]);
       });
   }
   const sendDataToESP32 = (str) => {
@@ -141,7 +144,7 @@ const App = () => {
 
   return (
     <SafeAreaView style={styles.mainBody}>
-      <View style={ styles.titleContainer}>
+      <View style={styles.titleContainer}>
         <Text style={styles.titleText}>Jewellery Automation</Text>
       </View>
       {/* Checks connection */}
@@ -151,13 +154,19 @@ const App = () => {
           <View style={styles.actionCard}>
             <Text style={styles.switchTxt}>Temple Switch</Text>
             <View style={styles.buttonPack}>
-              <TouchableOpacity style={styles.button}>
+              <TouchableOpacity
+                // onPress={() => sendDataToESP32('F')}
+                style={styles.button}>
                 <FontAwesomeIcon icon={faLeftLong} size={20} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.button}>
+              <TouchableOpacity
+                // onPress={() => sendDataToESP32('F')}
+                style={styles.button}>
                 <FontAwesomeIcon icon={faStop} size={20} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.button}>
+              <TouchableOpacity
+                // onPress={() => sendDataToESP32('F')}
+                style={styles.button}>
                 <FontAwesomeIcon icon={faRightLong} size={20} />
               </TouchableOpacity>
             </View>
@@ -165,13 +174,19 @@ const App = () => {
           <View style={styles.actionCard}>
             <Text style={styles.switchTxt}>Arch Switch</Text>
             <View style={styles.buttonPack}>
-              <TouchableOpacity style={styles.button}>
+              <TouchableOpacity
+                // onPress={() => sendDataToESP32('F')}
+                style={styles.button}>
                 <FontAwesomeIcon icon={faLeftLong} size={20} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.button} >
+              <TouchableOpacity
+                // onPress={() => sendDataToESP32('F')}
+                style={styles.button} >
                 <FontAwesomeIcon icon={faStop} size={20} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.button}>
+              <TouchableOpacity
+                // onPress={() => sendDataToESP32('F')}
+                style={styles.button}>
                 <FontAwesomeIcon icon={faRightLong} size={20} />
               </TouchableOpacity>
             </View>
@@ -179,23 +194,33 @@ const App = () => {
           <View style={styles.actionCard}>
             <Text style={styles.switchTxt}>Lotus Switch</Text>
             <View style={styles.buttonPack}>
-              <TouchableOpacity style={styles.button}>
+              <TouchableOpacity
+                // onPress={() => sendDataToESP32('F')}
+                style={styles.button}>
                 <FontAwesomeIcon icon={faLeftLong} size={20} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.button}>
+              <TouchableOpacity
+                // onPress={() => sendDataToESP32('F')}
+                style={styles.button}>
                 <FontAwesomeIcon icon={faStop} size={20} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.button}>
+              <TouchableOpacity
+                // onPress={() => sendDataToESP32('F')}
+                style={styles.button}>
                 <FontAwesomeIcon icon={faRightLong} size={20} />
               </TouchableOpacity>
             </View>
           </View>
-          <View style={styles.actionCard}>
+          <TouchableOpacity
+            // onPress={() => { sendDataToESP32('F') }}
+            style={styles.disconnectCard}>
             <Text style={styles.switchTxt}>All Off</Text>
-          </View>
-          <View style={styles.actionCard}>
+          </TouchableOpacity>
+          <TouchableOpacity
+            // onPress={() => { disconnectDevice() }}
+            style={styles.disconnectCard}>
             <Text style={styles.switchTxt}>Disconnect</Text>
-          </View>
+          </TouchableOpacity>
         </View>
         : //if not connected
         <View style={styles.bodyContainer}>
@@ -224,14 +249,8 @@ const App = () => {
             }
           </View>
           <TouchableOpacity
-            style={styles.connectButton}
-            onPress={() => {
-              setIsConnected((prev) => {
-                return {
-                  ...prev, connection: true
-                }
-              })
-            }}>
+            // onPress={() => { connectDevice() }}
+            style={styles.connectButton}>
             <Text style={{ color: '#111', fontFamily: 'Roboto-Regular', fontSize: 20, }}>Connect to device</Text>
           </TouchableOpacity>
         </View>
@@ -268,7 +287,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   connectionbar: {
-    elevation:20,
+    elevation: 20,
     flexDirection: 'row',
     backgroundColor: 'lightgrey',
     height: '10%',
@@ -278,14 +297,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     margin: '2%',
   },
-  tick: {
-    resizeMode: 'contain',
-    width: '11.5%',
-    height: '100%',
-    opacity: 0.75,
-  },
   connectButton: {
-    elevation:100,
+    elevation: 100,
     backgroundColor: '#B7BABF',
     height: '9.5%',
     width: '80%',
@@ -317,6 +330,17 @@ const styles = StyleSheet.create({
   },
   button: {
     marginHorizontal: '45%'
+  },
+  disconnectCard: {
+    elevation: 10,
+    height: '10%',
+    width: '95%',
+    margin: '3%',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    backgroundColor: 'lightgrey',
+    paddingHorizontal: '4%',
+    borderRadius: 25,
   }
 });
 export default App;
