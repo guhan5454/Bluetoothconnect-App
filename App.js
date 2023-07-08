@@ -1,22 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Text, View, Platform, StatusBar, ScrollView, StyleSheet, Dimensions, SafeAreaView, NativeModules, ToastAndroid, Alert,
-  useColorScheme, TouchableOpacity, NativeEventEmitter, PermissionsAndroid
+  Text, View, Platform, StatusBar, StyleSheet, Dimensions, SafeAreaView, NativeModules, ToastAndroid, Alert,
+  useColorScheme, TouchableOpacity, NativeEventEmitter, PermissionsAndroid, ActivityIndicator, Image
 } from 'react-native';
 import BleManager from 'react-native-ble-manager';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { faStop, faLeftLong, faRightLong } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 const BleManagerModule = NativeModules.BleManager;
 const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 const App = () => {
+
+  const [isConnected, setIsConnected] = useState({
+    'connection': true,
+    'bluetooth': false,
+    'ble': false,
+    'location': false,
+  });
+
   useEffect(() => {
     // turn on bluetooth if it is not on
     BleManager.enableBluetooth().then(() => {
       console.log('Bluetooth is turned on!');
+      setIsConnected((prev) => {
+        return {
+          ...prev, bluetooth: true
+        }
+      });
     });
     // start bluetooth manager
     BleManager.start({ showAlert: false }).then(() => {
       console.log('BLE Manager initialized');
+      setIsConnected((prev) => {
+        return {
+          ...prev, ble: true
+        }
+      });
     });
     let stopListener = BleManagerEmitter.addListener(
       'BleManagerStopScan',
@@ -26,20 +46,33 @@ const App = () => {
         handleGetConnectedDevices();
       },
     );
-    if (Platform.OS === 'android' && Platform.Version >= 23) {
+    if (Platform.OS === 'android') {
       PermissionsAndroid.check(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       ).then(result => {
         if (result) {
           console.log('Permission is OK');
+          setIsConnected((prev) => {
+            return {
+              ...prev, location: true
+            }
+          });
         } else {
           PermissionsAndroid.request(
             PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
           ).then(result => {
             if (result) {
               console.log('User accept');
+              setIsConnected((prev) => {
+                return {
+                  ...prev, location: true
+                }
+              });
             } else {
               console.log('User refuse');
+              Alert.alert('Permission Needed', 'App requires Location Permission', [
+                { text: 'OK', onPress: () => console.log('alert closed') }
+              ]);
             }
           });
         }
@@ -55,6 +88,11 @@ const App = () => {
       .then(() => {
         // Success code
         console.log("Connected");
+        setIsConnected((prev) => {
+          return {
+            ...prev, connection: true
+          }
+        });
       })
       .catch((error) => {
         // Failure code
@@ -70,6 +108,11 @@ const App = () => {
       .then(() => {
         // Success code
         console.log("Disconnected");
+        setIsConnected((prev) => {
+          return {
+            ...prev, connection: false
+          }
+        });
       })
       .catch((error) => {
         // Failure code
@@ -77,7 +120,7 @@ const App = () => {
       });
   }
   const sendDataToESP32 = (str) => {
-    const str1=str;
+    const str1 = str;
     const data = str1.charCodeAt(0); //converts to ASCII
     // console.log(data);
 
@@ -92,96 +135,184 @@ const App = () => {
       })
       .catch((error) => {
         console.log("Write error:", error);
+
       });
-  };
-  const isDarkMode = useColorScheme() === 'dark';
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
   return (
-    <SafeAreaView style={[backgroundStyle, styles.mainBody]}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        style={backgroundStyle}
-        contentContainerStyle={styles.mainBody}
-        contentInsetAdjustmentBehavior="automatic">
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-            marginBottom: 40,
-          }}>
-          <View>
-            <Text
-              style={{
-                fontSize: 30,
-                textAlign: 'center',
-                color: isDarkMode ? Colors.white : Colors.black,
-              }}>
-              Jewellery Automation
-            </Text>
+    <SafeAreaView style={styles.mainBody}>
+      <View style={ styles.titleContainer}>
+        <Text style={styles.titleText}>Jewellery Automation</Text>
+      </View>
+      {/* Checks connection */}
+      {isConnected['connection'] ?
+        // if connected
+        <View style={styles.bodyContainer}>
+          <View style={styles.actionCard}>
+            <Text style={styles.switchTxt}>Temple Switch</Text>
+            <View style={styles.buttonPack}>
+              <TouchableOpacity style={styles.button}>
+                <FontAwesomeIcon icon={faLeftLong} size={20} />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.button}>
+                <FontAwesomeIcon icon={faStop} size={20} />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.button}>
+                <FontAwesomeIcon icon={faRightLong} size={20} />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.actionCard}>
+            <Text style={styles.switchTxt}>Arch Switch</Text>
+            <View style={styles.buttonPack}>
+              <TouchableOpacity style={styles.button}>
+                <FontAwesomeIcon icon={faLeftLong} size={20} />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.button} >
+                <FontAwesomeIcon icon={faStop} size={20} />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.button}>
+                <FontAwesomeIcon icon={faRightLong} size={20} />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.actionCard}>
+            <Text style={styles.switchTxt}>Lotus Switch</Text>
+            <View style={styles.buttonPack}>
+              <TouchableOpacity style={styles.button}>
+                <FontAwesomeIcon icon={faLeftLong} size={20} />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.button}>
+                <FontAwesomeIcon icon={faStop} size={20} />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.button}>
+                <FontAwesomeIcon icon={faRightLong} size={20} />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.actionCard}>
+            <Text style={styles.switchTxt}>All Off</Text>
+          </View>
+        </View>
+        : //if not connected
+        <View style={styles.bodyContainer}>
+          <View style={styles.connectionbar}>
+            <Text style={{ fontSize: 18, color: '#111' }}>Turning bluetooth</Text>
+            {isConnected['bluetooth'] ?
+              <Image source={require('./assets/icons/check_circle.png')} style={styles.tick} />
+              :
+              <ActivityIndicator color='#1b9bd1' size='large' />
+            }
+          </View>
+          <View style={styles.connectionbar}>
+            <Text style={{ fontSize: 18, color: '#111' }}>BLE Initialization</Text>
+            {isConnected['ble'] ?
+              <Image source={require('./assets/icons/check_circle.png')} style={styles.tick} />
+              :
+              <ActivityIndicator color='#1b9bd1' size='large' />
+            }
+          </View>
+          <View style={styles.connectionbar}>
+            <Text style={{ fontSize: 18, color: '#111' }}>Location Access</Text>
+            {isConnected['location'] ?
+              <Image source={require('./assets/icons/check_circle.png')} style={styles.tick} />
+              :
+              <ActivityIndicator color='#1b9bd1' size='large' />
+            }
           </View>
           <TouchableOpacity
-            activeOpacity={0.5}
-            style={styles.buttonStyle}
-            onPress={connectDevice}>
-            <Text style={styles.buttonTextStyle}>
-              Connect device
-              {/* {isScanning ? 'Scanning...' : 'Scan Bluetooth Devices'} */}
-            </Text>
+            style={styles.connectButton}
+            onPress={() => {
+              setIsConnected((prev) => {
+                return {
+                  ...prev, connection: true
+                }
+              })
+            }}>
+            <Text style={{ color: '#f6f6f6', fontFamily: 'Roboto-Regular', fontSize: 20, }}>Connect to device</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            style={styles.buttonStyle}
-            onPress={disconnectDevice}>
-            <Text style={styles.buttonTextStyle}>
-              Disconnect
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            style={styles.buttonStyle}
-            onPress={()=>sendDataToESP32("F")}>
-            <Text style={styles.buttonTextStyle}>
-              Send data F
-              {/* {isScanning ? 'Scanning...' : 'Scan Bluetooth Devices'} */}
-            </Text>
-          </TouchableOpacity>
-
         </View>
-        {/* list of scanned bluetooth devices */}
-
-      </ScrollView>
+      }
     </SafeAreaView>
   );
 };
-const windowHeight = Dimensions.get('window').height;
+// const windowHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   mainBody: {
     flex: 1,
+    height: '100%',
+    backgroundColor: 'lightgrey'
+  },
+  titleContainer: {
+    height: '15%',
+    padding: '5%',
+    paddingTop: '3%',
+    // backgroundColor:'yellow',
     justifyContent: 'center',
-    alignItems:'center',
-    height: windowHeight,
+
   },
-  buttonStyle: {
-    backgroundColor: '#307ecc',
-    borderWidth: 0,
-    color: '#FFFFFF',
-    borderColor: '#307ecc',
-    height: 40,
+  titleText: {
+    fontFamily: 'Roboto-Medium',
+    fontSize: 27,
+    color: '#111',
+    marginBottom: '2%',
+  },
+  bodyContainer: {
+    height: '90%',
+    // backgroundColor:'blue',
+    width: '100%',
+    justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 30,
-    marginLeft: 35,
-    marginRight: 35,
-    marginTop: 15,
   },
-  buttonTextStyle: {
-    color: '#FFFFFF',
-    paddingVertical: 10,
-    fontSize: 16,
+  connectionbar: {
+    elevation:20,
+    flexDirection: 'row',
+    backgroundColor: 'lightgrey',
+    height: '10%',
+    width: '80%',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    borderRadius: 20,
+    margin: '2%',
   },
+  tick: {
+    resizeMode: 'contain',
+    width: '11.5%',
+    height: '100%',
+    opacity: 0.75,
+  },
+  connectButton: {
+    backgroundColor: '#7CC9F7',
+    height: '9.5%',
+    width: '80%',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    borderRadius: 60,
+    marginTop: '30%',
+  },
+  actionCard: {
+    elevation: 10,
+    height: '15%',
+    width: '95%',
+    margin: '5%',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    backgroundColor: 'lightgrey',
+    paddingHorizontal: '4%',
+    borderRadius: 25,
+  },
+  switchTxt: {
+    color: 'black',
+    fontSize: 23
+  },
+  buttonPack: {
+    flexDirection: 'row',
+    // backgroundColor:'yellow',
+    justifyContent: 'space-evenly',
+    paddingHorizontal: '30%',
+  },
+  button: {
+    marginHorizontal: '45%'
+  }
 });
 export default App;
