@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import BleManager from 'react-native-ble-manager';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
-import { faStop, faLeftLong, faRightLong } from '@fortawesome/free-solid-svg-icons';
+import { faStop, faLeftLong, faRightLong, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 const BleManagerModule = NativeModules.BleManager;
 const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -13,7 +13,7 @@ const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 const App = () => {
 
   const [isConnected, setIsConnected] = useState({
-    'connection': true,
+    'connection': false,
     'bluetooth': false,
     'ble': false,
     'location': false,
@@ -193,13 +193,16 @@ const App = () => {
           <View style={styles.actionCard}>
             <Text style={styles.switchTxt}>All Off</Text>
           </View>
+          <View style={styles.actionCard}>
+            <Text style={styles.switchTxt}>Disconnect</Text>
+          </View>
         </View>
         : //if not connected
         <View style={styles.bodyContainer}>
           <View style={styles.connectionbar}>
             <Text style={{ fontSize: 18, color: '#111' }}>Turning bluetooth</Text>
             {isConnected['bluetooth'] ?
-              <Image source={require('./assets/icons/check_circle.png')} style={styles.tick} />
+              <FontAwesomeIcon icon={faCircleCheck} size={30} />
               :
               <ActivityIndicator color='#1b9bd1' size='large' />
             }
@@ -207,7 +210,7 @@ const App = () => {
           <View style={styles.connectionbar}>
             <Text style={{ fontSize: 18, color: '#111' }}>BLE Initialization</Text>
             {isConnected['ble'] ?
-              <Image source={require('./assets/icons/check_circle.png')} style={styles.tick} />
+              <FontAwesomeIcon icon={faCircleCheck} size={30} />
               :
               <ActivityIndicator color='#1b9bd1' size='large' />
             }
@@ -215,7 +218,7 @@ const App = () => {
           <View style={styles.connectionbar}>
             <Text style={{ fontSize: 18, color: '#111' }}>Location Access</Text>
             {isConnected['location'] ?
-              <Image source={require('./assets/icons/check_circle.png')} style={styles.tick} />
+              <FontAwesomeIcon icon={faCircleCheck} size={30} />
               :
               <ActivityIndicator color='#1b9bd1' size='large' />
             }
@@ -229,7 +232,7 @@ const App = () => {
                 }
               })
             }}>
-            <Text style={{ color: '#f6f6f6', fontFamily: 'Roboto-Regular', fontSize: 20, }}>Connect to device</Text>
+            <Text style={{ color: '#111', fontFamily: 'Roboto-Regular', fontSize: 20, }}>Connect to device</Text>
           </TouchableOpacity>
         </View>
       }
@@ -261,7 +264,7 @@ const styles = StyleSheet.create({
     height: '90%',
     // backgroundColor:'blue',
     width: '100%',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     alignItems: 'center',
   },
   connectionbar: {
@@ -282,7 +285,8 @@ const styles = StyleSheet.create({
     opacity: 0.75,
   },
   connectButton: {
-    backgroundColor: '#7CC9F7',
+    elevation:100,
+    backgroundColor: '#B7BABF',
     height: '9.5%',
     width: '80%',
     alignItems: 'center',
@@ -294,7 +298,7 @@ const styles = StyleSheet.create({
     elevation: 10,
     height: '15%',
     width: '95%',
-    margin: '5%',
+    margin: '3%',
     alignItems: 'center',
     justifyContent: 'space-evenly',
     backgroundColor: 'lightgrey',
