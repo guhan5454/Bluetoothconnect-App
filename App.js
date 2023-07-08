@@ -1,22 +1,21 @@
-import React, {useState, useEffect} from 'react';
-import {Text, View, Platform, StatusBar, ScrollView, StyleSheet, Dimensions, SafeAreaView, NativeModules,
-  useColorScheme, TouchableOpacity, NativeEventEmitter, PermissionsAndroid} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  Text, View, Platform, StatusBar, ScrollView, StyleSheet, Dimensions, SafeAreaView, NativeModules, ToastAndroid, Alert,
+  useColorScheme, TouchableOpacity, NativeEventEmitter, PermissionsAndroid
+} from 'react-native';
 import BleManager from 'react-native-ble-manager';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 const BleManagerModule = NativeModules.BleManager;
 const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
+
 const App = () => {
-  // const peripherals = new Map();
-  // const [isScanning, setIsScanning] = useState(false);
-  // const [connected, setConnected] = useState(false);
-  // const [bluetoothDevices, setBluetoothDevices] = useState([]);
   useEffect(() => {
     // turn on bluetooth if it is not on
     BleManager.enableBluetooth().then(() => {
       console.log('Bluetooth is turned on!');
     });
     // start bluetooth manager
-    BleManager.start({showAlert: false}).then(() => {
+    BleManager.start({ showAlert: false }).then(() => {
       console.log('BLE Manager initialized');
     });
     let stopListener = BleManagerEmitter.addListener(
@@ -50,43 +49,46 @@ const App = () => {
       stopListener.remove();
     };
   }, []);
+
   const connectDevice = () => {
     BleManager.connect("64:E8:33:DA:B9:26")
-        .then(() => {
+      .then(() => {
         // Success code
         console.log("Connected");
       })
       .catch((error) => {
         // Failure code
         console.log(error);
+        Alert.alert('Couldn\'t Connect', `${error}`, [
+          { text: 'OK', onPress: () => console.log('alert clossed') }
+        ]);
       });
   }
-  const disconnectDevice= ()=> {BleManager.disconnect("64:E8:33:DA:B9:26")
-  .then(() => {
-    // Success code
-    console.log("Disconnected");
-  })
-  .catch((error) => {
-    // Failure code
-    console.log(error);
-  });
-}
-  const sendDataToESP32 = () => {
-    const hexData = "65"; // Replace with your desired hexadecimal data
-  
-    // Convert hexadecimal data to number array
-    const data = hexData
-      .match(/.{1,2}/g) // Split hexadecimal data into pairs of characters
-      .map((byte) => parseInt(byte, 16)); // Convert each pair to a number
-  
+
+  const disconnectDevice = () => {
+    BleManager.disconnect("64:E8:33:DA:B9:26")
+      .then(() => {
+        // Success code
+        console.log("Disconnected");
+      })
+      .catch((error) => {
+        // Failure code
+        console.log(error);
+      });
+  }
+  const sendDataToESP32 = (str) => {
+    const str1=str;
+    const data = str1.charCodeAt(0); //converts to ASCII
+    // console.log(data);
+
     BleManager.write(
       '64:E8:33:DA:B9:26',
       '2e83cb78-c55e-4172-a529-e9597e98aa53',
       'f101a3de-99aa-4375-bc5d-8e58679e267c',
-      data
+      [data]
     )
       .then(() => {
-        console.log("Write: " + hexData);
+        console.log("Write: " + data);
       })
       .catch((error) => {
         console.log("Write error:", error);
@@ -96,15 +98,7 @@ const App = () => {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
-  // render list of bluetooth devices
-  // const RenderItem = ({peripheral}) => {
-  //   const color = peripheral.connected ? 'green' : '#fff';
-  //   return (
-  //     <>
-        
-  //     </>
-  //   );
-  // };
+
   return (
     <SafeAreaView style={[backgroundStyle, styles.mainBody]}>
       <StatusBar
@@ -150,15 +144,16 @@ const App = () => {
           <TouchableOpacity
             activeOpacity={0.5}
             style={styles.buttonStyle}
-            onPress={sendDataToESP32}>
+            onPress={()=>sendDataToESP32("F")}>
             <Text style={styles.buttonTextStyle}>
-              Send data
+              Send data F
               {/* {isScanning ? 'Scanning...' : 'Scan Bluetooth Devices'} */}
             </Text>
           </TouchableOpacity>
+
         </View>
         {/* list of scanned bluetooth devices */}
-        
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -168,6 +163,7 @@ const styles = StyleSheet.create({
   mainBody: {
     flex: 1,
     justifyContent: 'center',
+    alignItems:'center',
     height: windowHeight,
   },
   buttonStyle: {

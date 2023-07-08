@@ -18,7 +18,7 @@ import BleManager from 'react-native-ble-manager';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 const BleManagerModule = NativeModules.BleManager;
 const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
-// const App = () => {
+const App = () => {
   const peripherals = new Map();
   const [isScanning, setIsScanning] = useState(false);
   const [connected, setConnected] = useState(false);
