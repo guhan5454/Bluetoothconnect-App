@@ -9,7 +9,6 @@ import { faStop, faLeftLong, faRightLong, faCircleCheck } from '@fortawesome/fre
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 const BleManagerModule = NativeModules.BleManager;
 const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
-  n
 const App = () => {
 
   const [isConnected, setIsConnected] = useState({
