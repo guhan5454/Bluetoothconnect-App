@@ -18,6 +18,7 @@ import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 import ConnectingScreen from './connectingScreen';
+import Lottie from 'lottie-react-native';
 
 import BleManager from 'react-native-ble-manager';
 import { AppContext } from '../Context/Context';
@@ -113,6 +114,7 @@ export default function checkScreen() {
               bluetooth: false,
             };
           });
+          break;
         default:
           break;
       }
@@ -120,60 +122,62 @@ export default function checkScreen() {
     }, true /*=emitCurrentState*/);
   }, [isConnected['bluetooth']]);
 
-  
-  if(isConnected.bluetooth && isConnected.ble && isConnected.location){
-    setTimeout(()=> setTiming(true),1000)
+  if (isConnected.bluetooth && isConnected.ble && isConnected.location) {
+    setTimeout(() => setTiming(true), 1300);
   }
 
- 
   return (
     <>
-    {(timing)? (<ConnectingScreen />) : (
-      <SafeAreaView style={styles.mainBody}>
-      <StatusBar backgroundColor={styles.titleContainer.backgroundColor} />
-      <View style={styles.titleContainer}>
-        <Text style={styles.titleText}>Jewellery Automation</Text>
-      </View>
-      <View style={styles.bodyContainer}>
-        {isConnected['bluetooth'] ? (
-          <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
-            <Text style={{ fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular' }}>Turning bluetooth</Text>
-            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
+      {timing ? (
+        <ConnectingScreen />
+      ) : (
+        <SafeAreaView style={styles.mainBody}>
+          <StatusBar backgroundColor={styles.titleContainer.backgroundColor} />
+          <View style={styles.titleContainer}>
+            <Text style={styles.titleText}>Jewellery Automation</Text>
           </View>
-        ) : (
-          <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
-            <Text style={{ fontSize: 18, color: '#ccc', fontFamily: 'Roboto-Regular' }}>Turning bluetooth</Text>
-            <ActivityIndicator color="green" size="large" />
-          </View>
-        )}
+          <View style={styles.bodyContainer}>
+            <View style={styles.animationContainer}>
+              <Lottie source={require('../assets/animations/ConnectingAnimation.json')} autoPlay loop />
+            </View>
+            {isConnected['bluetooth'] ? (
+              <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
+                <Text style={{ fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular' }}>Turning bluetooth</Text>
+                <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
+              </View>
+            ) : (
+              <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
+                <Text style={{ fontSize: 18, color: '#ccc', fontFamily: 'Roboto-Regular' }}>Turning bluetooth</Text>
+                <ActivityIndicator color="green" size="large" />
+              </View>
+            )}
 
-        {isConnected['ble'] ? (
-          <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
-            <Text style={{ fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular' }}>BLE Initialization</Text>
-            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
-          </View>
-        ) : (
-          <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
-            <Text style={{ fontSize: 18, color: '#ccc', fontFamily: 'Roboto-Regular' }}>BLE Initialization</Text>
-            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
-          </View>
-        )}
+            {isConnected['ble'] ? (
+              <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
+                <Text style={{ fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular' }}>BLE Initialization</Text>
+                <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
+              </View>
+            ) : (
+              <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
+                <Text style={{ fontSize: 18, color: '#ccc', fontFamily: 'Roboto-Regular' }}>BLE Initialization</Text>
+                <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
+              </View>
+            )}
 
-        {isConnected['location'] ? (
-          <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
-            <Text style={{ fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular' }}>Location Access</Text>
-            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
+            {isConnected['location'] ? (
+              <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
+                <Text style={{ fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular' }}>Location Access</Text>
+                <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
+              </View>
+            ) : (
+              <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
+                <Text style={{ fontSize: 18, color: '#ccc', fontFamily: 'Roboto-Regular' }}>Location Access</Text>
+                <ActivityIndicator color="green" size="large" />
+              </View>
+            )}
           </View>
-        ) : (
-          <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
-            <Text style={{ fontSize: 18, color: '#ccc', fontFamily: 'Roboto-Regular' }}>Location Access</Text>
-            <ActivityIndicator color="green" size="large" />
-          </View>
-        )}
-      </View>
-    </SafeAreaView>
-    ) }
-    
+        </SafeAreaView>
+      )}
     </>
   );
 }
@@ -185,11 +189,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#d3d3d3',
   },
   titleContainer: {
-    height: '14%',
+    width: '100%',
+    borderBottomRightRadius: 70,
+    borderBottomLeftRadius: 70,
+    height: '10%',
     padding: '5%',
     paddingTop: '3%',
-    backgroundColor: '#00A1F2',
+    backgroundColor: '#2196F3',
     justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: '5%',
   },
   titleText: {
@@ -200,7 +208,8 @@ const styles = StyleSheet.create({
   },
   bodyContainer: {
     flex: 1,
-    justifyContent: 'center',
+    height: '40%',
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
   connectionbar: {
@@ -223,5 +232,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     borderRadius: 60,
     marginTop: '30%',
+  },
+  animationContainer: {
+    height: '40%',
+    width: '100%',
   },
 });
