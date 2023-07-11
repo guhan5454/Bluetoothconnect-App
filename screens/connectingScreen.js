@@ -13,9 +13,9 @@ import {
   ActivityIndicator,
   StatusBar,
 } from 'react-native';
-import React, {useState, useEffect, useContext} from 'react';
-import {faCircleCheck} from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import React, { useEffect, useContext } from 'react';
+import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 
 import BleManager from 'react-native-ble-manager';
@@ -24,14 +24,7 @@ const BleManagerModule = NativeModules.BleManager;
 const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 export default function connectingScreen() {
-
-  const { isConnected, setIsConnected} = useContext(AppContext)
-  // const [isConnected, setIsConnected] = useState({
-  //   connection: false,
-  //   bluetooth: false,
-  //   ble: false,
-  //   location: false,
-  // });
+  const { isConnected, setIsConnected } = useContext(AppContext);
 
   useEffect(() => {
     // turn on bluetooth if it is not on
@@ -48,11 +41,11 @@ export default function connectingScreen() {
       .catch(err => {
         console.log('Catched Error:', err);
         Alert.alert('Bluetooth not enabled', 'Turn on Bluetooth and try again', [
-          {text: 'OK', onPress: () => console.log('alert closed')},
+          { text: 'OK', onPress: () => console.log('alert closed') },
         ]);
       });
     // start bluetooth manager
-    BleManager.start({showAlert: false}).then(() => {
+    BleManager.start({ showAlert: false }).then(() => {
       console.log('BLE Manager initialized');
       setIsConnected(prev => {
         return {
@@ -89,7 +82,7 @@ export default function connectingScreen() {
             } else {
               console.log('User refuse');
               Alert.alert('Permission Needed', 'App requires Location Permission', [
-                {text: 'OK', onPress: () => console.log('alert closed')},
+                { text: 'OK', onPress: () => console.log('alert closed') },
               ]);
             }
           });
@@ -156,52 +149,52 @@ export default function connectingScreen() {
       </View>
       <View style={styles.bodyContainer}>
         {isConnected['bluetooth'] ? (
-          <View style={[styles.connectionbar, {backgroundColor: '#E1DCDC'}]}>
-            <Text style={{fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular'}}>Turning bluetooth</Text>
-            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{opacity: 0.9}} />
+          <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
+            <Text style={{ fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular' }}>Turning bluetooth</Text>
+            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
           </View>
         ) : (
-          <View style={[styles.connectionbar, {backgroundColor: '#BBB'}]}>
-            <Text style={{fontSize: 18, color: '#ccc', fontFamily: 'Roboto-Regular'}}>Turning bluetooth</Text>
+          <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
+            <Text style={{ fontSize: 18, color: '#ccc', fontFamily: 'Roboto-Regular' }}>Turning bluetooth</Text>
             <ActivityIndicator color="green" size="large" />
           </View>
         )}
         {isConnected['ble'] ? (
-          <View style={[styles.connectionbar, {backgroundColor: '#E1DCDC'}]}>
-            <Text style={{fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular'}}>BLE Initialization</Text>
-            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{opacity: 0.9}} />
+          <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
+            <Text style={{ fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular' }}>BLE Initialization</Text>
+            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
           </View>
         ) : (
-          <View style={[styles.connectionbar, {backgroundColor: '#BBB'}]}>
-            <Text style={{fontSize: 18, color: '#ccc', fontFamily: 'Roboto-Regular'}}>BLE Initialization</Text>
-            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{opacity: 0.9}} />
+          <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
+            <Text style={{ fontSize: 18, color: '#ccc', fontFamily: 'Roboto-Regular' }}>BLE Initialization</Text>
+            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
           </View>
         )}
         {isConnected['location'] ? (
-          <View style={[styles.connectionbar, {backgroundColor: '#E1DCDC'}]}>
-            <Text style={{fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular'}}>Location Access</Text>
-            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{opacity: 0.9}} />
+          <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
+            <Text style={{ fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular' }}>Location Access</Text>
+            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
           </View>
         ) : (
-          <View style={[styles.connectionbar, {backgroundColor: '#BBB'}]}>
-            <Text style={{fontSize: 18, color: '#ccc', fontFamily: 'Roboto-Regular'}}>Location Access</Text>
+          <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
+            <Text style={{ fontSize: 18, color: '#ccc', fontFamily: 'Roboto-Regular' }}>Location Access</Text>
             <ActivityIndicator color="green" size="large" />
           </View>
         )}
         <TouchableOpacity
-        onPress={() => {
-          connectDevice();
-        }}
-        style={styles.connectButton}>
-        <Text
-          style={{
-            color: '#d3d3d3',
-            fontFamily: 'Roboto-Regular',
-            fontSize: 20,
-          }}>
-          Connect to device
-        </Text>
-      </TouchableOpacity>
+          onPress={() => {
+            connectDevice();
+          }}
+          style={styles.connectButton}>
+          <Text
+            style={{
+              color: '#d3d3d3',
+              fontFamily: 'Roboto-Regular',
+              fontSize: 20,
+            }}>
+            Connect to device
+          </Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

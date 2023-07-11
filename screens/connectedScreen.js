@@ -1,27 +1,13 @@
-import React, {useState} from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  SafeAreaView,
-  ToastAndroid,
-  Alert,
-  TouchableOpacity,
-  StatusBar,
-} from 'react-native';
-import {faCircle, faArrowLeft, faArrowRight, faArrowUp, faArrowDown} from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-
+import React, { useContext } from 'react';
+import { Text, View, StyleSheet, SafeAreaView, ToastAndroid, Alert, TouchableOpacity, StatusBar } from 'react-native';
+import { faCircle, faArrowLeft, faArrowRight, faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { AppContext } from '../Context/Context';
 
 import BleManager from 'react-native-ble-manager';
 
 const ConnectedScreen = () => {
-  const [isConnected, setIsConnected] = useState({
-    connection: false,
-    bluetooth: false,
-    ble: false,
-    location: false,
-  });
+  const { isConnected, setIsConnected } = useContext(AppContext);
 
   const disconnectDevice = () => {
     setIsConnected(prev => {
@@ -56,7 +42,7 @@ const ConnectedScreen = () => {
       })
       .catch(error => {
         console.log('Write error:', error);
-        Alert.alert('Message Not Sent', `${error}`, [{text: 'OK', onPress: () => console.log('alert closed')}]);
+        Alert.alert('Message Not Sent', `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
       });
   };
 
