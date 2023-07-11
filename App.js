@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { AppContext, AppProvider } from './Context/Context';
 import ConnectedScreen from './screens/connectedScreen';
-import ConnectingScreen from './screens/connectingScreen';
+import ConnectingScreen from './screens/checkScreen';
 
 const MainNavigator = () => {
   const { isConnected, setIsConnected } = useContext(AppContext);

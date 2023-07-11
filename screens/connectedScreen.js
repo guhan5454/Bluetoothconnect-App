@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Text, View, StyleSheet, SafeAreaView, ToastAndroid, Alert, TouchableOpacity, StatusBar } from 'react-native';
+import { Text, View, StyleSheet, SafeAreaView, ToastAndroid, Alert, TouchableOpacity, StatusBar, ImageBackground } from 'react-native';
 import { faCircle, faArrowLeft, faArrowRight, faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { AppContext } from '../Context/Context';
@@ -48,6 +48,7 @@ const ConnectedScreen = () => {
 
   return (
     <SafeAreaView style={styles.mainBody}>
+      <ImageBackground source={require('../assets/bg.jpg')} resizeMode="cover" style={styles.image} >
       <StatusBar backgroundColor={styles.titleContainer.backgroundColor} />
       <View style={styles.titleContainer}>
         <Text style={styles.titleText}>Jewellery Automation</Text>
@@ -110,6 +111,7 @@ const ConnectedScreen = () => {
           <Text style={styles.switchTxt}>Disconnect</Text>
         </TouchableOpacity>
       </View>
+      </ImageBackground>
     </SafeAreaView>
   );
 };
@@ -121,11 +123,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#d3d3d3',
   },
   titleContainer: {
-    height: '14%',
+    width:'100%',
+    borderBottomRightRadius:85,
+    borderBottomLeftRadius:85,
+    height: '10%',
     padding: '5%',
     paddingTop: '3%',
     backgroundColor: '#007acc',
     justifyContent: 'center',
+    alignItems:'center',
     marginBottom: '5%',
   },
   titleText: {
@@ -174,6 +180,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: '4%',
     borderRadius: 25,
   },
+  image:{
+    flex:1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });
 
 export default ConnectedScreen;
