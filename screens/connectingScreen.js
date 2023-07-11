@@ -155,6 +155,7 @@ export default function connectingScreen() {
         <Text style={styles.titleText}>Jewellery Automation</Text>
       </View>
       <View style={styles.bodyContainer}>
+  
         {isConnected['bluetooth'] ? (
           <View style={[styles.connectionbar, {backgroundColor: '#E1DCDC'}]}>
             <Text style={{fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular'}}>Turning bluetooth</Text>
@@ -166,6 +167,7 @@ export default function connectingScreen() {
             <ActivityIndicator color="green" size="large" />
           </View>
         )}
+
         {isConnected['ble'] ? (
           <View style={[styles.connectionbar, {backgroundColor: '#E1DCDC'}]}>
             <Text style={{fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular'}}>BLE Initialization</Text>
@@ -177,6 +179,7 @@ export default function connectingScreen() {
             <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{opacity: 0.9}} />
           </View>
         )}
+
         {isConnected['location'] ? (
           <View style={[styles.connectionbar, {backgroundColor: '#E1DCDC'}]}>
             <Text style={{fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular'}}>Location Access</Text>
