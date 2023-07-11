@@ -368,11 +368,13 @@
 
 import { View, Text } from 'react-native'
 import React from 'react'
+import connectingScreen from './screens/connectingScreen'
+import { AppProvider } from './Context/Context'
 
 export default function App() {
   return (
-    <View>
-      <Text>App</Text>
-    </View>
+    <AppProvider>
+      <connectingScreen />
+    </AppProvider>
   )
 }

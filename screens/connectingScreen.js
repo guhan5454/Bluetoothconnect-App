@@ -13,22 +13,25 @@ import {
   ActivityIndicator,
   StatusBar,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {faCircleCheck} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 
 import BleManager from 'react-native-ble-manager';
+import { AppContext } from '../Context/Context';
 const BleManagerModule = NativeModules.BleManager;
 const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 export default function connectingScreen() {
-  const [isConnected, setIsConnected] = useState({
-    connection: false,
-    bluetooth: false,
-    ble: false,
-    location: false,
-  });
+
+  const { isConnected, setIsConnected} = useContext(AppContext)
+  // const [isConnected, setIsConnected] = useState({
+  //   connection: false,
+  //   bluetooth: false,
+  //   ble: false,
+  //   location: false,
+  // });
 
   useEffect(() => {
     // turn on bluetooth if it is not on
