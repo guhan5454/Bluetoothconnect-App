@@ -105,43 +105,45 @@ const App = () => {
   }, []);
 
   const connectDevice = () => {
-    ToastAndroid.show('Connecting...', 1000);
-    BleManager.connect('64:E8:33:DA:B9:26')
-      .then(() => {
-        // Success code
-        ToastAndroid.show('Connected', 1000);
-        console.log('Connected');
-        setIsConnected(prev => {
-          return {
-            ...prev,
-            connection: true,
-          };
-        });
-      })
-      .catch(error => {
-        // Failure code
-        console.log(error);
-        Alert.alert("Couldn't Connect", `${error}`, [{text: 'OK', onPress: () => console.log('alert closed')}]);
-      });
+    setIsConnected(prev => {
+      return {
+        ...prev,
+        connection: true,
+      };
+    });
+    // ToastAndroid.show('Connecting...', 1000);
+    // BleManager.connect('64:E8:33:DA:B9:26')
+    //   .then(() => {
+    //     // Success code
+    //     ToastAndroid.show('Connected', 1000);
+    //     console.log('Connected');
+    //     //state
+    //   })
+    //   .catch(error => {
+    //     // Failure code
+    //     console.log(error);
+    //     Alert.alert("Couldn't Connect", `${error}`, [{text: 'OK', onPress: () => console.log('alert closed')}]);
+    //   });
   };
 
   const disconnectDevice = () => {
-    BleManager.disconnect('64:E8:33:DA:B9:26')
-      .then(() => {
-        // Success code
-        console.log('Disconnected');
-        setIsConnected(prev => {
-          return {
-            ...prev,
-            connection: false,
-          };
-        });
-      })
-      .catch(error => {
-        // Failure code
-        console.log(error);
-        Alert.alert("Couldn't Disconnect", `${error}`, [{text: 'OK', onPress: () => console.log('alert closed')}]);
-      });
+    setIsConnected(prev => {
+      return {
+        ...prev,
+        connection: false,
+      };
+    });
+    // BleManager.disconnect('64:E8:33:DA:B9:26')
+    //   .then(() => {
+    //     // Success code
+    //     console.log('Disconnected');
+    //     //state
+    //   })
+    //   .catch(error => {
+    //     // Failure code
+    //     console.log(error);
+    //     Alert.alert("Couldn't Disconnect", `${error}`, [{text: 'OK', onPress: () => console.log('alert closed')}]);
+    //   });
   };
   const sendDataToESP32 = str => {
     const str1 = str;
@@ -289,7 +291,7 @@ const styles = StyleSheet.create({
     height: '14%',
     padding: '5%',
     paddingTop: '3%',
-    backgroundColor: '#008069',
+    backgroundColor: '#007acc',
     justifyContent: 'center',
     marginBottom: '5%',
   },
@@ -317,7 +319,7 @@ const styles = StyleSheet.create({
   },
   connectButton: {
     elevation: 100,
-    backgroundColor: '#005c4b',
+    backgroundColor: '#33AEEE',
     height: '9.5%',
     width: '80%',
     alignItems: 'center',
