@@ -16,7 +16,6 @@ import {
 import React, { useEffect, useContext, useRef } from 'react';
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import ConnectingScreen from './connectingScreen';
 import Lottie from 'lottie-react-native';
 
 import BleManager from 'react-native-ble-manager';
@@ -128,73 +127,69 @@ export default function checkScreen() {
   }
 
   return (
-    <>
-        <SafeAreaView style={styles.mainBody}>
-          <StatusBar backgroundColor={styles.titleContainer.backgroundColor} />
-          <View style={styles.titleContainer}>
-            <Text style={styles.titleText}>Jewellery Automation</Text>
-          </View>
-          {/* <Lottie source={require('../assets/animations/wifiConnecting.json')} ref={animationRef} loop style={styles.animation} /> */}
-          <View style={styles.bodyContainer}>
-          <View style={styles.animation}>
-              <Lottie source={require('../assets/animations/wifiConnecting.json')} loop ref={animationRef} />
-              <TouchableHighlight
-          activeOpacity={0.6}
-          underlayColor="#2799F4"
-          onPress={() => {
-            ToastAndroid.show('Connecting...', 200);
-            playAnimation();
-            setTimeout(() => connectDevice(), 3000);
-          }}
-          style={styles.connectButton}>
-          <Text
-            style={{
-              color: '#d3d3d3',
-              fontFamily: 'Roboto-Regular',
-              fontSize: 20,
-            }}>
-            Connect
-          </Text>
-        </TouchableHighlight>
+      <SafeAreaView style={styles.mainBody}>
+        <StatusBar backgroundColor={styles.titleContainer.backgroundColor} />
+        <View style={styles.titleContainer}>
+          <Text style={styles.titleText}>Jewellery Automation</Text>
         </View>
-            {isConnected['bluetooth'] ? (
-              <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
-                <Text style={{ fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular' }}>Turning bluetooth</Text>
-                <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
-              </View>
-            ) : (
-              <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
-                <Text style={{ fontSize: 18, color: '#ccc', fontFamily: 'Roboto-Regular' }}>Turning bluetooth</Text>
-                <ActivityIndicator color="green" size="large" />
-              </View>
-            )}
-
-            {isConnected['ble'] ? (
-              <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
-                <Text style={{ fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular' }}>BLE Initialization</Text>
-                <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
-              </View>
-            ) : (
-              <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
-                <Text style={{ fontSize: 18, color: '#ccc', fontFamily: 'Roboto-Regular' }}>BLE Initialization</Text>
-                <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
-              </View>
-            )}
-
-            {isConnected['location'] ? (
-              <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
-                <Text style={{ fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular' }}>Location Access</Text>
-                <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
-              </View>
-            ) : (
-              <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
-                <Text style={{ fontSize: 18, color: '#ccc', fontFamily: 'Roboto-Regular' }}>Location Access</Text>
-                <ActivityIndicator color="green" size="large" />
-              </View>
-            )}
+        <View style={styles.bodyContainer}>
+          <View style={styles.animation}>
+            <Lottie source={require('../assets/animations/wifiConnecting.json')} loop ref={animationRef} />
+            <TouchableHighlight
+              activeOpacity={0.6}
+              underlayColor="#2D9BF3"
+              onPress={() => {
+                ToastAndroid.show('Connecting...', 200);
+                playAnimation();
+                setTimeout(() => connectDevice(), 3000);
+              }}
+              style={(timing? [styles.connectButton,{backgroundColor: '#2196f3',}]:[styles.connectButton,{backgroundColor: 'grey',}])}>
+              <Text
+                style={{
+                  color: '#d3d3d3',
+                  fontFamily: 'Roboto-Regular',
+                  fontSize: 20,
+                }}>
+                Connect
+              </Text>
+            </TouchableHighlight>
           </View>
-        </SafeAreaView>
-    </>
+          {isConnected['bluetooth'] ? (
+            <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
+              <Text style={{ fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular' }}>Turning bluetooth</Text>
+              <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
+            </View>
+          ) : (
+            <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
+              <Text style={{ fontSize: 18, color: '#ccc', fontFamily: 'Roboto-Regular' }}>Turning bluetooth</Text>
+              <ActivityIndicator color="green" size="large" />
+            </View>
+          )}
+          {isConnected['ble'] ? (
+            <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
+              <Text style={{ fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular' }}>BLE Initialization</Text>
+              <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
+            </View>
+          ) : (
+            <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
+              <Text style={{ fontSize: 18, color: '#ccc', fontFamily: 'Roboto-Regular' }}>BLE Initialization</Text>
+              <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
+            </View>
+          )}
+
+          {isConnected['location'] ? (
+            <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
+              <Text style={{ fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular' }}>Location Access</Text>
+              <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
+            </View>
+          ) : (
+            <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
+              <Text style={{ fontSize: 18, color: '#ccc', fontFamily: 'Roboto-Regular' }}>Location Access</Text>
+              <ActivityIndicator color="green" size="large" />
+            </View>
+          )}
+        </View>
+      </SafeAreaView>
   );
 }
 
@@ -223,9 +218,9 @@ const styles = StyleSheet.create({
     marginBottom: '2%',
   },
   bodyContainer: {
-    flex: .5,
+    flex: 0.5,
     // backgroundColor: 'black',
-    paddingTop:100,
+    paddingTop: 100,
     // height: '40%',
     justifyContent: 'center',
     alignItems: 'center',
@@ -250,23 +245,12 @@ const styles = StyleSheet.create({
   },
   connectButton: {
     elevation: 5,
-    backgroundColor: 'grey',
-    height: '11%',
-    width: '80%',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-    borderRadius: 60,
-    marginTop: '30%',
-  },
-  connectButton: {
-    elevation: 5,
     width: 150,
     height: 150,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
     borderRadius: 100,
-    backgroundColor: '#2196F3',
-    opacity: 0.95,
-  }
+    // opacity: 0.95,
+  },
 });
