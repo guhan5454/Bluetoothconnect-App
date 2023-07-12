@@ -5,14 +5,7 @@ import Lottie from 'lottie-react-native';
 
 const connectingScreen = () => {
   const { setIsConnected, isConnected } = useContext(AppContext);
-  const animationRef = useRef(null);
-
-  const playAnimation = () => {
-    if (animationRef.current) {
-      animationRef.current.play();
-    }
-  };
-
+  
   const connectDevice = () => {
     setIsConnected(prev => {
       return {
@@ -42,25 +35,7 @@ const connectingScreen = () => {
           <Text style={styles.titleText}>Jewellery Automation</Text>
         </View>
         {/* <ImageBackground source={require('../assets/bg.jpg')} resizeMode="cover" style={styles.image}> */}
-        <Lottie source={require('../assets/animations/wifiConnecting.json')} ref={animationRef} loop style={styles.animation} />
-        <TouchableHighlight
-          activeOpacity={0.6}
-          underlayColor="#2799F4"
-          onPress={() => {
-            ToastAndroid.show('Connecting...', 200);
-            playAnimation();
-            setTimeout(() => connectDevice(), 3000);
-          }}
-          style={styles.connectButton}>
-          <Text
-            style={{
-              color: '#d3d3d3',
-              fontFamily: 'Roboto-Regular',
-              fontSize: 20,
-            }}>
-            Connect
-          </Text>
-        </TouchableHighlight>
+        
         {/* </ImageBackground> */}
       </View>
     </View>

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Text, View, StyleSheet, SafeAreaView, ToastAndroid, Alert, TouchableOpacity, StatusBar, Image } from 'react-native';
 import { faCircleStop, faCircleLeft, faCircleRight, faCircleUp, faCircleDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
@@ -8,6 +8,19 @@ import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 
 const ConnectedScreen = () => {
   const { isConnected, setIsConnected } = useContext(AppContext);
+
+  const [buttonState, setButtonState] = useState({
+    tempup: "#1E88E5",
+    tempdown: false,
+    tempstop: false,
+    archtop: false,
+    archbottom: "white",
+    archstop: false,
+    lotusopen: false,
+    lotusclose: false,
+    lotusstop: false,
+    alloff: false
+  });
 
   //checks the state of bluetooth
   useEffect(() => {
@@ -58,20 +71,38 @@ const ConnectedScreen = () => {
     //   });
   };
 
-  const sendDataToESP32 = str => {
+  const sendDataToESP32 = (str, key) => {
+
+  updatedState= { tempup: "#1E88E5" ,
+    tempdown: false,
+    tempstop: false,
+    archtop: false,
+    archbottom: "white",
+    archstop: false,
+    lotusopen: false,
+    lotusclose: false,
+    lotusstop: false,
+    alloff: false
+  }
+  console.log(key)
+  updatedState[key] ="#1E88E5"
+
+  setButtonState(updatedState)
+
+
     const str1 = str;
     const data = str1.charCodeAt(0); //converts to ASCII
-    // console.log(data);
+    console.log(data);
 
-    BleManager.write('64:E8:33:DA:B9:26', '2e83cb78-c55e-4172-a529-e9597e98aa53', 'f101a3de-99aa-4375-bc5d-8e58679e267c', [data])
-      .then(() => {
-        console.log('Write: ' + data);
-        ToastAndroid.show('Message sent', 3000);
-      })
-      .catch(error => {
-        console.log('Write error:', error);
-        Alert.alert('Message Not Sent', `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
-      });
+    // BleManager.write('64:E8:33:DA:B9:26', '2e83cb78-c55e-4172-a529-e9597e98aa53', 'f101a3de-99aa-4375-bc5d-8e58679e267c', [data])
+    //   .then(() => {
+    //     console.log('Write: ' + data);
+    //     ToastAndroid.show('Message sent', 3000);
+    //   })
+    //   .catch(error => {
+    //     console.log('Write error:', error);
+    //     Alert.alert('Message Not Sent', `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
+    //   });
   };
 
   return (
@@ -92,7 +123,7 @@ const ConnectedScreen = () => {
                 <FontAwesomeIcon icon={faCircleStop} size={42} color="#CE2828" />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => sendDataToESP32('D')} style={styles.button}>
-                <FontAwesomeIcon icon={faCircleRight} size={42} color="#1E88E5" />
+                <FontAwesomeIcon icon={faCircleRight} size={42} color={buttonState.tempup} />
               </TouchableOpacity>
             </View>
           </View>
@@ -105,8 +136,8 @@ const ConnectedScreen = () => {
               <TouchableOpacity onPress={() => sendDataToESP32('F')} style={styles.button}>
                 <FontAwesomeIcon icon={faCircleStop} size={42} color="#CE2828" />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('B')} style={styles.button}>
-                <FontAwesomeIcon icon={faCircleRight} size={42} color="#1E88E5" />
+              <TouchableOpacity onPress={() => sendDataToESP32('B', 'archbottom')} style={styles.button}>
+                <FontAwesomeIcon icon={faCircleRight} size={42} color={buttonState.archbottom} />
               </TouchableOpacity>
             </View>
           </View>

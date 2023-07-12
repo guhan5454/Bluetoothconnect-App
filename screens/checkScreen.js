@@ -6,12 +6,14 @@ import {
   SafeAreaView,
   NativeModules,
   Alert,
+  TouchableHighlight,
   NativeEventEmitter,
   PermissionsAndroid,
   ActivityIndicator,
+  ToastAndroid,
   StatusBar,
 } from 'react-native';
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useRef } from 'react';
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import ConnectingScreen from './connectingScreen';
@@ -24,6 +26,34 @@ const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 export default function checkScreen() {
   const { isConnected, setIsConnected, timing, setTiming } = useContext(AppContext);
+  const animationRef = useRef(null);
+
+  const playAnimation = () => {
+    if (animationRef.current) {
+      animationRef.current.play();
+    }
+  };
+
+  const connectDevice = () => {
+    setIsConnected(prev => {
+      return {
+        ...prev,
+        connection: true,
+      };
+    });
+    // BleManager.connect('64:E8:33:DA:B9:26')
+    //   .then(() => {
+    //     // Success code
+    //     ToastAndroid.show('Connected', 1000);
+    //     console.log('Connected');
+    //     //state
+    //   })
+    //   .catch(error => {
+    //     // Failure code
+    //     console.log(error);
+    //     Alert.alert("Couldn't Connect", `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
+    //   });
+  };
 
   useEffect(() => {
     // turn on bluetooth if it is not on
@@ -99,18 +129,34 @@ export default function checkScreen() {
 
   return (
     <>
-      {timing ? (
-        <ConnectingScreen />
-      ) : (
         <SafeAreaView style={styles.mainBody}>
           <StatusBar backgroundColor={styles.titleContainer.backgroundColor} />
           <View style={styles.titleContainer}>
             <Text style={styles.titleText}>Jewellery Automation</Text>
           </View>
+          {/* <Lottie source={require('../assets/animations/wifiConnecting.json')} ref={animationRef} loop style={styles.animation} /> */}
           <View style={styles.bodyContainer}>
-            <View style={styles.animationContainer}>
-              <Lottie source={require('../assets/animations/ConnectingAnimation.json')} autoPlay loop />
-            </View>
+          <View style={styles.animation}>
+              <Lottie source={require('../assets/animations/wifiConnecting.json')} loop ref={animationRef} />
+              <TouchableHighlight
+          activeOpacity={0.6}
+          underlayColor="#2799F4"
+          onPress={() => {
+            ToastAndroid.show('Connecting...', 200);
+            playAnimation();
+            setTimeout(() => connectDevice(), 3000);
+          }}
+          style={styles.connectButton}>
+          <Text
+            style={{
+              color: '#d3d3d3',
+              fontFamily: 'Roboto-Regular',
+              fontSize: 20,
+            }}>
+            Connect
+          </Text>
+        </TouchableHighlight>
+        </View>
             {isConnected['bluetooth'] ? (
               <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
                 <Text style={{ fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular' }}>Turning bluetooth</Text>
@@ -148,7 +194,6 @@ export default function checkScreen() {
             )}
           </View>
         </SafeAreaView>
-      )}
     </>
   );
 }
@@ -178,16 +223,25 @@ const styles = StyleSheet.create({
     marginBottom: '2%',
   },
   bodyContainer: {
-    flex: 1,
-    height: '40%',
-    justifyContent: 'flex-start',
+    flex: .5,
+    // backgroundColor: 'black',
+    paddingTop:100,
+    // height: '40%',
+    justifyContent: 'center',
     alignItems: 'center',
+  },
+  animation: {
+    // position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    width: '100%',
   },
   connectionbar: {
     elevation: 5,
     flexDirection: 'row',
-    // backgroundColor: '#DCDADA',
-    height: '10%',
+    backgroundColor: '#DCDADA',
+    height: '25%',
     width: '80%',
     justifyContent: 'space-evenly',
     alignItems: 'center',
@@ -196,16 +250,23 @@ const styles = StyleSheet.create({
   },
   connectButton: {
     elevation: 5,
-    backgroundColor: '#33AEEE',
-    height: '9.5%',
+    backgroundColor: 'grey',
+    height: '11%',
     width: '80%',
     alignItems: 'center',
     justifyContent: 'space-evenly',
     borderRadius: 60,
     marginTop: '30%',
   },
-  animationContainer: {
-    height: '40%',
-    width: '100%',
-  },
+  connectButton: {
+    elevation: 5,
+    width: 150,
+    height: 150,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 100,
+    backgroundColor: '#2196F3',
+    opacity: 0.95,
+  }
 });
