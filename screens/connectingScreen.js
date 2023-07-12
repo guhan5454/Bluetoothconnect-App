@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, StatusBar } from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight, ImageBackground, StatusBar } from 'react-native';
 import React, { useContext, useRef } from 'react';
 import { AppContext } from '../Context/Context';
 import Lottie from 'lottie-react-native';
@@ -44,12 +44,14 @@ const connectingScreen = () => {
           <Text style={styles.titleText}>Jewellery Automation</Text>
         </View>
         {/* <ImageBackground source={require('../assets/bg.jpg')} resizeMode="cover" style={styles.image}> */}
-        <Lottie source={require('../assets/animations/circleanimation.json')} ref={animationRef} loop style={styles.animation} />
-        <TouchableOpacity
+        <Lottie source={require('../assets/animations/wifiConnecting.json')} ref={animationRef} loop style={styles.animation} />
+        <TouchableHighlight
+          activeOpacity={0.6}
+          underlayColor="#2799F4"
           onPress={() => {
             // connectDevice();
             playAnimation();
-            setTimeout(() => connectDevice(), 2500);
+            setTimeout(() => connectDevice(), 3000);
           }}
           style={styles.connectButton}>
           <Text
@@ -60,7 +62,7 @@ const connectingScreen = () => {
             }}>
             Connect
           </Text>
-        </TouchableOpacity>
+        </TouchableHighlight>
         {/* </ImageBackground> */}
       </LinearGradient>
     </View>
@@ -75,8 +77,8 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     width: '100%',
-    borderBottomRightRadius: 70,
-    borderBottomLeftRadius: 70,
+    borderBottomRightRadius: 55,
+    borderBottomLeftRadius: 55,
     height: '10%',
     padding: '5%',
     paddingTop: '3%',
@@ -99,13 +101,13 @@ const styles = StyleSheet.create({
   },
   connectButton: {
     elevation: 5,
-    width: 140,
-    height: 140,
+    width: 150,
+    height: 150,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
     borderRadius: 100,
-    backgroundColor: '#0087FF',
+    backgroundColor: '#2196F3',
     opacity: 0.95,
   },
   image: {
@@ -118,8 +120,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
-    height: '92%',
-    width: '74%',
+    height: '100%',
+    width: '80%',
   },
 });
 

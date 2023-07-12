@@ -16,12 +16,12 @@ import {
 import React, { useEffect, useContext } from 'react';
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 import ConnectingScreen from './connectingScreen';
 import Lottie from 'lottie-react-native';
 
 import BleManager from 'react-native-ble-manager';
 import { AppContext } from '../Context/Context';
+
 const BleManagerModule = NativeModules.BleManager;
 const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
@@ -96,32 +96,6 @@ export default function checkScreen() {
     };
   }, []);
 
-  useEffect(() => {
-    BluetoothStateManager.onStateChange(bluetoothState => {
-      switch (bluetoothState) {
-        case 'PoweredOn':
-          setIsConnected(prev => {
-            return {
-              ...prev,
-              bluetooth: true,
-            };
-          });
-          break;
-        case 'PoweredOff':
-          setIsConnected(prev => {
-            return {
-              ...prev,
-              bluetooth: false,
-            };
-          });
-          break;
-        default:
-          break;
-      }
-      // console.log("\n Bluetooth State:",bluetoothState);
-    }, true /*=emitCurrentState*/);
-  }, [isConnected['bluetooth']]);
-
   if (isConnected.bluetooth && isConnected.ble && isConnected.location) {
     setTimeout(() => setTiming(true), 1300);
   }
@@ -190,8 +164,8 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     width: '100%',
-    borderBottomRightRadius: 70,
-    borderBottomLeftRadius: 70,
+    borderBottomRightRadius: 55,
+    borderBottomLeftRadius: 55,
     height: '10%',
     padding: '5%',
     paddingTop: '3%',

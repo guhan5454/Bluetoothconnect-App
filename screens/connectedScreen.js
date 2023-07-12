@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
   Text,
   View,
@@ -8,16 +8,44 @@ import {
   Alert,
   TouchableOpacity,
   StatusBar,
-  ImageBackground,
+  Image,
 } from 'react-native';
-import { faCircle, faArrowLeft, faArrowRight, faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { faCircleStop, faCircleLeft, faCircleRight, faCircleUp, faCircleDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { AppContext } from '../Context/Context';
 import LinearGradient from 'react-native-linear-gradient';
 import BleManager from 'react-native-ble-manager';
+import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 
 const ConnectedScreen = () => {
   const { isConnected, setIsConnected } = useContext(AppContext);
+
+  useEffect(() => {
+    BluetoothStateManager.onStateChange(bluetoothState => {
+      switch (bluetoothState) {
+        case 'PoweredOn':
+          setIsConnected(prev => {
+            return {
+              ...prev,
+              bluetooth: true,
+            };
+          });
+          break;
+        case 'PoweredOff':
+          setIsConnected(prev => {
+            return {
+              ...prev,
+              connection:false,
+              bluetooth: false,
+            };
+          });
+          break;
+        default:
+          break;
+      }
+      // console.log("\n Bluetooth State:",bluetoothState);
+    }, true /*=emitCurrentState*/);
+  }, [isConnected['bluetooth']]);
 
   const disconnectDevice = () => {
     setIsConnected(prev => {
@@ -58,11 +86,7 @@ const ConnectedScreen = () => {
 
   return (
     <SafeAreaView style={styles.mainBody}>
-      <LinearGradient
-        colors={['#BBDEFB', '#42A5F5']}
-        angle={45} 
-        angleCenter={{ x: 0.5, y: 0.5 }}
-        style={styles.bodyContainer}>
+      <LinearGradient colors={['#BBDEFB', '#42A5F5']} angle={45} angleCenter={{ x: 1, y: 0.5 }} style={styles.bodyContainer}>
         <StatusBar backgroundColor={styles.titleContainer.backgroundColor} />
         <View style={styles.titleContainer}>
           <Text style={styles.titleText}>Jewellery Automation</Text>
@@ -72,13 +96,13 @@ const ConnectedScreen = () => {
             <Text style={styles.switchTxt}>Temple Switch</Text>
             <View style={styles.buttonPack}>
               <TouchableOpacity onPress={() => sendDataToESP32('C')} style={styles.button}>
-                <FontAwesomeIcon icon={faArrowLeft} size={20} color="#282828" />
+                <FontAwesomeIcon icon={faCircleLeft} size={42} color="#1E88E5" />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => sendDataToESP32('F')} style={styles.button}>
-                <FontAwesomeIcon icon={faCircle} size={20} color="#9F1F1F" />
+                <FontAwesomeIcon icon={faCircleStop} size={42} color="#CE2828" />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => sendDataToESP32('O')} style={styles.button}>
-                <FontAwesomeIcon icon={faArrowRight} size={20} color="#282828" />
+                <FontAwesomeIcon icon={faCircleRight} size={42} color="#1E88E5" />
               </TouchableOpacity>
             </View>
           </View>
@@ -86,13 +110,13 @@ const ConnectedScreen = () => {
             <Text style={styles.switchTxt}>Arch Switch</Text>
             <View style={styles.buttonPack}>
               <TouchableOpacity onPress={() => sendDataToESP32('F')} style={styles.button}>
-                <FontAwesomeIcon icon={faArrowLeft} size={20} color="#282828" />
+                <FontAwesomeIcon icon={faCircleLeft} size={42} color="#1E88E5" />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => sendDataToESP32('F')} style={styles.button}>
-                <FontAwesomeIcon icon={faCircle} size={20} color="#9F1F1F" />
+                <FontAwesomeIcon icon={faCircleStop} size={42} color="#CE2828" />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => sendDataToESP32('F')} style={styles.button}>
-                <FontAwesomeIcon icon={faArrowRight} size={20} color="#282828" />
+                <FontAwesomeIcon icon={faCircleRight} size={42} color="#1E88E5" />
               </TouchableOpacity>
             </View>
           </View>
@@ -100,13 +124,13 @@ const ConnectedScreen = () => {
             <Text style={styles.switchTxt}>Lotus Switch</Text>
             <View style={styles.buttonPack}>
               <TouchableOpacity onPress={() => sendDataToESP32('F')} style={styles.button}>
-                <FontAwesomeIcon icon={faArrowLeft} size={20} color="#282828" />
+                <FontAwesomeIcon icon={faCircleLeft} size={42} color="#1E88E5" />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => sendDataToESP32('F')} style={styles.button}>
-                <FontAwesomeIcon icon={faCircle} size={20} color="#9F1F1F" />
+                <FontAwesomeIcon icon={faCircleStop} size={42} color="#CE2828" />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => sendDataToESP32('F')} style={styles.button}>
-                <FontAwesomeIcon icon={faArrowRight} size={20} color="#282828" />
+                <FontAwesomeIcon icon={faCircleRight} size={42} color="#1E88E5" />
               </TouchableOpacity>
             </View>
           </View>
@@ -138,8 +162,8 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     width: '100%',
-    borderBottomRightRadius: 75,
-    borderBottomLeftRadius: 75,
+    borderBottomRightRadius: 55,
+    borderBottomLeftRadius: 55,
     height: '10%',
     padding: '5%',
     paddingTop: '3%',
@@ -160,12 +184,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   actionCard: {
-    opacity:0.8,
+    opacity: 0.8,
     margin: '3%',
     alignItems: 'center',
+    justifyContent:'space-evenly',
     paddingHorizontal: '4%',
-    backgroundColor: '#DCDADA',
+    backgroundColor: '#E4E4E4',
     width: '93%',
+    height:'20%',
     paddingVertical: '5%',
     borderRadius: 25,
     elevation: 2,
@@ -179,21 +205,21 @@ const styles = StyleSheet.create({
   buttonPack: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    paddingHorizontal: '30%',
+    paddingHorizontal: '25%',
   },
   button: {
     marginHorizontal: '45%',
   },
   disconnectCard: {
-    opacity:0.9,
+    opacity: 0.9,
     elevation: 2,
-    backgroundColor: '#DCDADA',
+    backgroundColor: '#E4E4E4',
     height: '10%',
     width: '90%',
-    paddingTop: '4%',
-    margin: '3%',
+    marginVertical: '3%',
     alignItems: 'center',
-    paddingHorizontal: '25%',
+    justifyContent:'center',
+    paddingHorizontal: '30%',
     borderRadius: 25,
   },
   image: {
