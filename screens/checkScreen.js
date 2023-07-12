@@ -5,9 +5,7 @@ import {
   StyleSheet,
   SafeAreaView,
   NativeModules,
-  ToastAndroid,
   Alert,
-  TouchableOpacity,
   NativeEventEmitter,
   PermissionsAndroid,
   ActivityIndicator,
@@ -21,7 +19,6 @@ import Lottie from 'lottie-react-native';
 
 import BleManager from 'react-native-ble-manager';
 import { AppContext } from '../Context/Context';
-
 const BleManagerModule = NativeModules.BleManager;
 const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
@@ -164,8 +161,8 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     width: '100%',
-    borderBottomRightRadius: 55,
-    borderBottomLeftRadius: 55,
+    // borderBottomRightRadius: 55,
+    // borderBottomLeftRadius: 55,
     height: '10%',
     padding: '5%',
     paddingTop: '3%',

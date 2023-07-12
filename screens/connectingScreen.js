@@ -1,8 +1,7 @@
-import { StyleSheet, Text, View, TouchableHighlight, ImageBackground, StatusBar } from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight, ImageBackground, StatusBar, ToastAndroid } from 'react-native';
 import React, { useContext, useRef } from 'react';
 import { AppContext } from '../Context/Context';
 import Lottie from 'lottie-react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
 const connectingScreen = () => {
   const { setIsConnected, isConnected } = useContext(AppContext);
@@ -21,7 +20,6 @@ const connectingScreen = () => {
         connection: true,
       };
     });
-    // ToastAndroid.show('Connecting...', 1000);
     // BleManager.connect('64:E8:33:DA:B9:26')
     //   .then(() => {
     //     // Success code
@@ -32,14 +30,14 @@ const connectingScreen = () => {
     //   .catch(error => {
     //     // Failure code
     //     console.log(error);
-    //     Alert.alert("Couldn't Connect", `${error}`, [{text: 'OK', onPress: () => console.log('alert closed')}]);
+    //     Alert.alert("Couldn't Connect", `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
     //   });
   };
 
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={styles.titleContainer.backgroundColor} />
-      <LinearGradient colors={['#90CAF9', '#1E88E5']} angleCenter={{ x: 0.5, y: 0.5 }} angle={40} style={styles.bodyContainer}>
+      <View style={styles.bodyContainer}>
         <View style={styles.titleContainer}>
           <Text style={styles.titleText}>Jewellery Automation</Text>
         </View>
@@ -49,7 +47,7 @@ const connectingScreen = () => {
           activeOpacity={0.6}
           underlayColor="#2799F4"
           onPress={() => {
-            // connectDevice();
+            ToastAndroid.show('Connecting...', 200);
             playAnimation();
             setTimeout(() => connectDevice(), 3000);
           }}
@@ -64,7 +62,7 @@ const connectingScreen = () => {
           </Text>
         </TouchableHighlight>
         {/* </ImageBackground> */}
-      </LinearGradient>
+      </View>
     </View>
   );
 };
@@ -77,8 +75,8 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     width: '100%',
-    borderBottomRightRadius: 55,
-    borderBottomLeftRadius: 55,
+    // borderBottomRightRadius: 55,
+    // borderBottomLeftRadius: 55,
     height: '10%',
     padding: '5%',
     paddingTop: '3%',
@@ -90,13 +88,14 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontFamily: 'Roboto-Medium',
-    fontSize: 27,
+    fontSize: 24,
     color: '#fff',
     marginBottom: '2%',
   },
   bodyContainer: {
     flex: 1,
     alignItems: 'center',
+    backgroundColor:'#DCDBDE',
     justifyContent: 'center',
   },
   connectButton: {
@@ -112,7 +111,6 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    // color: 'blue',
     justifyContent: 'center',
     alignItems: 'center',
   },

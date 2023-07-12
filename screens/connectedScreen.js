@@ -1,25 +1,15 @@
 import React, { useContext, useEffect } from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  SafeAreaView,
-  ToastAndroid,
-  Alert,
-  TouchableOpacity,
-  StatusBar,
-  Image,
-} from 'react-native';
+import { Text, View, StyleSheet, SafeAreaView, ToastAndroid, Alert, TouchableOpacity, StatusBar, Image } from 'react-native';
 import { faCircleStop, faCircleLeft, faCircleRight, faCircleUp, faCircleDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { AppContext } from '../Context/Context';
-import LinearGradient from 'react-native-linear-gradient';
 import BleManager from 'react-native-ble-manager';
 import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 
 const ConnectedScreen = () => {
   const { isConnected, setIsConnected } = useContext(AppContext);
 
+  //checks the state of bluetooth
   useEffect(() => {
     BluetoothStateManager.onStateChange(bluetoothState => {
       switch (bluetoothState) {
@@ -35,7 +25,7 @@ const ConnectedScreen = () => {
           setIsConnected(prev => {
             return {
               ...prev,
-              connection:false,
+              connection: false,
               bluetooth: false,
             };
           });
@@ -48,6 +38,7 @@ const ConnectedScreen = () => {
   }, [isConnected['bluetooth']]);
 
   const disconnectDevice = () => {
+    // ToastAndroid.show('Disconnecting...',10);
     setIsConnected(prev => {
       return {
         ...prev,
@@ -58,13 +49,12 @@ const ConnectedScreen = () => {
     //   .then(() => {
     //     // Success code
     //     console.log('Disconnected');
-    // ToastAndroid.show('Disconnecting...', 1000);
     //     //state
     //   })
     //   .catch(error => {
     //     // Failure code
     //     console.log(error);
-    //     Alert.alert("Couldn't Disconnect", `${error}`, [{text: 'OK', onPress: () => console.log('alert closed')}]);
+    //     Alert.alert("Couldn't Disconnect", `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
     //   });
   };
 
@@ -86,7 +76,7 @@ const ConnectedScreen = () => {
 
   return (
     <SafeAreaView style={styles.mainBody}>
-      <LinearGradient colors={['#BBDEFB', '#42A5F5']} angle={45} angleCenter={{ x: 1, y: 0.5 }} style={styles.bodyContainer}>
+      <View style={styles.bodyContainer}>
         <StatusBar backgroundColor={styles.titleContainer.backgroundColor} />
         <View style={styles.titleContainer}>
           <Text style={styles.titleText}>Jewellery Automation</Text>
@@ -95,13 +85,13 @@ const ConnectedScreen = () => {
           <View style={styles.actionCard}>
             <Text style={styles.switchTxt}>Temple Switch</Text>
             <View style={styles.buttonPack}>
-              <TouchableOpacity onPress={() => sendDataToESP32('C')} style={styles.button}>
+              <TouchableOpacity onPress={() => sendDataToESP32('U')} style={styles.button}>
                 <FontAwesomeIcon icon={faCircleLeft} size={42} color="#1E88E5" />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => sendDataToESP32('F')} style={styles.button}>
                 <FontAwesomeIcon icon={faCircleStop} size={42} color="#CE2828" />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('O')} style={styles.button}>
+              <TouchableOpacity onPress={() => sendDataToESP32('D')} style={styles.button}>
                 <FontAwesomeIcon icon={faCircleRight} size={42} color="#1E88E5" />
               </TouchableOpacity>
             </View>
@@ -109,13 +99,13 @@ const ConnectedScreen = () => {
           <View style={styles.actionCard}>
             <Text style={styles.switchTxt}>Arch Switch</Text>
             <View style={styles.buttonPack}>
-              <TouchableOpacity onPress={() => sendDataToESP32('F')} style={styles.button}>
+              <TouchableOpacity onPress={() => sendDataToESP32('T')} style={styles.button}>
                 <FontAwesomeIcon icon={faCircleLeft} size={42} color="#1E88E5" />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => sendDataToESP32('F')} style={styles.button}>
                 <FontAwesomeIcon icon={faCircleStop} size={42} color="#CE2828" />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('F')} style={styles.button}>
+              <TouchableOpacity onPress={() => sendDataToESP32('B')} style={styles.button}>
                 <FontAwesomeIcon icon={faCircleRight} size={42} color="#1E88E5" />
               </TouchableOpacity>
             </View>
@@ -123,13 +113,13 @@ const ConnectedScreen = () => {
           <View style={styles.actionCard}>
             <Text style={styles.switchTxt}>Lotus Switch</Text>
             <View style={styles.buttonPack}>
-              <TouchableOpacity onPress={() => sendDataToESP32('F')} style={styles.button}>
+              <TouchableOpacity onPress={() => sendDataToESP32('O')} style={styles.button}>
                 <FontAwesomeIcon icon={faCircleLeft} size={42} color="#1E88E5" />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => sendDataToESP32('F')} style={styles.button}>
                 <FontAwesomeIcon icon={faCircleStop} size={42} color="#CE2828" />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('F')} style={styles.button}>
+              <TouchableOpacity onPress={() => sendDataToESP32('C')} style={styles.button}>
                 <FontAwesomeIcon icon={faCircleRight} size={42} color="#1E88E5" />
               </TouchableOpacity>
             </View>
@@ -138,18 +128,18 @@ const ConnectedScreen = () => {
             onPress={() => {
               sendDataToESP32('F');
             }}
-            style={styles.disconnectCard}>
+            style={[styles.disconnectCard, { paddingHorizontal: '39%' }]}>
             <Text style={styles.switchTxt}>All Off</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
               disconnectDevice();
             }}
-            style={styles.disconnectCard}>
+            style={[styles.disconnectCard, { paddingHorizontal: '33%' }]}>
             <Text style={styles.switchTxt}>Disconnect</Text>
           </TouchableOpacity>
         </View>
-      </LinearGradient>
+      </View>
     </SafeAreaView>
   );
 };
@@ -162,8 +152,8 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     width: '100%',
-    borderBottomRightRadius: 55,
-    borderBottomLeftRadius: 55,
+    // borderBottomRightRadius: 55,
+    // borderBottomLeftRadius: 55,
     height: '10%',
     padding: '5%',
     paddingTop: '3%',
@@ -174,12 +164,13 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontFamily: 'Roboto-Medium',
-    fontSize: 27,
+    fontSize: 24,
     color: '#fff',
     marginBottom: '2%',
   },
   bodyContainer: {
     flex: 1,
+    backgroundColor: '#efefef',
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
@@ -187,11 +178,11 @@ const styles = StyleSheet.create({
     opacity: 0.8,
     margin: '3%',
     alignItems: 'center',
-    justifyContent:'space-evenly',
+    justifyContent: 'space-evenly',
     paddingHorizontal: '4%',
     backgroundColor: '#E4E4E4',
     width: '93%',
-    height:'20%',
+    height: '20%',
     paddingVertical: '5%',
     borderRadius: 25,
     elevation: 2,
@@ -215,11 +206,9 @@ const styles = StyleSheet.create({
     elevation: 2,
     backgroundColor: '#E4E4E4',
     height: '10%',
-    width: '90%',
     marginVertical: '3%',
     alignItems: 'center',
-    justifyContent:'center',
-    paddingHorizontal: '30%',
+    justifyContent: 'center',
     borderRadius: 25,
   },
   image: {
