@@ -17,14 +17,15 @@ import React, { useEffect, useContext, useRef } from 'react';
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import Lottie from 'lottie-react-native';
-
 import BleManager from 'react-native-ble-manager';
+import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 import { AppContext } from '../Context/Context';
+
 const BleManagerModule = NativeModules.BleManager;
 const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 export default function checkScreen() {
-  const { isConnected, setIsConnected, timing, setTiming } = useContext(AppContext);
+  const { isConnected, setIsConnected } = useContext(AppContext);
   const animationRef = useRef(null);
 
   const playAnimation = () => {
@@ -34,29 +35,94 @@ export default function checkScreen() {
   };
 
   const connectDevice = () => {
-    setIsConnected(prev => {
-      return {
-        ...prev,
-        connection: true,
-      };
-    });
-    // BleManager.connect('64:E8:33:DA:B9:26')
-    //   .then(() => {
-    //     // Success code
-    //     ToastAndroid.show('Connected', 1000);
-    //     console.log('Connected');
-    //     //state
-    //   })
-    //   .catch(error => {
-    //     // Failure code
-    //     console.log(error);
-    //     Alert.alert("Couldn't Connect", `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
-    //   });
+    if (isConnected.bluetooth && isConnected.ble && isConnected.location) {
+      ToastAndroid.show('Connecting...', 200);
+      playAnimation();
+      setTimeout(() => {
+        BleManager.connect('64:E8:33:DA:B9:26')
+          .then(() => {
+            // Success code
+            ToastAndroid.show('Connected', 1000);
+            console.log('Connected');
+            setIsConnected(prev => {
+              return {
+                ...prev,
+                connection: true,
+              };
+            });
+          })
+          .catch(error => {
+            // Failure code
+            console.log(error);
+            Alert.alert("Couldn't Connect", `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
+          });
+      }, 2000);
+    } else if (!isConnected.bluetooth) {
+      Alert.alert('Bluetooth turned off', 'Turn on bluetooth and try again', [
+        {
+          text: 'OK',
+          onPress: () => {
+            console.log('alert closed');
+            BleManager.enableBluetooth().catch(err => {
+              Alert.alert('Bluetooth not enabled', 'Turn on Bluetooth and try again', [
+                {
+                  text: 'OK',
+                  onPress: () => console.log('alert closed'),
+                },
+              ]);
+            });
+          },
+        },
+      ]);
+    } else {
+      Alert.alert("Couldn't Connect", ' ', [
+        {
+          text: 'OK',
+          onPress: () => console.log('alert closed'),
+        },
+      ]);
+    }
   };
 
   useEffect(() => {
-    // turn on bluetooth if it is not on
-    BleManager.enableBluetooth()
+    //request required permissions
+    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT)
+      .then(res => {
+        PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(result => {
+          if (result) {
+            console.log('Permission is OK');
+            setIsConnected(prev => {
+              return {
+                ...prev,
+                location: true,
+              };
+            });
+          } else {
+            PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(result => {
+              if (result) {
+                console.log('User accept');
+                setIsConnected(prev => {
+                  return {
+                    ...prev,
+                    location: true,
+                  };
+                });
+              } else {
+                console.log('User refuse');
+                Alert.alert('Permission Needed', 'App requires Location Permission', [
+                  {
+                    text: 'OK',
+                    onPress: () => console.log('alert closed'),
+                  },
+                ]);
+              }
+            });
+          }
+        });
+      }) //turn on bluetooth if it is off
+      .then(res => {
+        return BleManager.enableBluetooth();
+      })
       .then(() => {
         console.log('Bluetooth is turned on!');
         setIsConnected(prev => {
@@ -69,7 +135,10 @@ export default function checkScreen() {
       .catch(err => {
         console.log('Catched Error:', err);
         Alert.alert('Bluetooth not enabled', 'Turn on Bluetooth and try again', [
-          { text: 'OK', onPress: () => console.log('alert closed') },
+          {
+            text: 'OK',
+            onPress: () => console.log('alert closed'),
+          },
         ]);
       });
     // start bluetooth manager
@@ -82,114 +151,158 @@ export default function checkScreen() {
         };
       });
     });
+
     let stopListener = BleManagerEmitter.addListener('BleManagerStopScan', () => {
       setIsScanning(false);
       console.log('Scan is stopped');
       handleGetConnectedDevices();
     });
-    if (Platform.OS === 'android') {
-      PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(result => {
-        if (result) {
-          console.log('Permission is OK');
-          setIsConnected(prev => {
-            return {
-              ...prev,
-              location: true,
-            };
-          });
-        } else {
-          PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(result => {
-            if (result) {
-              console.log('User accept');
-              setIsConnected(prev => {
-                return {
-                  ...prev,
-                  location: true,
-                };
-              });
-            } else {
-              console.log('User refuse');
-              Alert.alert('Permission Needed', 'App requires Location Permission', [
-                { text: 'OK', onPress: () => console.log('alert closed') },
-              ]);
-            }
-          });
-        }
-      });
-    }
+
     return () => {
       stopListener.remove();
     };
   }, []);
 
-  if (isConnected.bluetooth && isConnected.ble && isConnected.location) {
-    setTimeout(() => setTiming(true), 1300);
-  }
+  useEffect(() => {
+    //checks for bluetooth changes
+    BluetoothStateManager.onStateChange(bluetoothState => {
+      switch (bluetoothState) {
+        case 'PoweredOn':
+          setIsConnected(prev => {
+            return {
+              ...prev,
+              bluetooth: true,
+            };
+          });
+          break;
+        case 'PoweredOff':
+          setIsConnected(prev => {
+            return {
+              ...prev,
+              connection: false,
+              bluetooth: false,
+            };
+          });
+          break;
+        default:
+          break;
+      }
+    }, true /*=emitCurrentState*/);
+  }, [isConnected['bluetooth']]);
 
   return (
-      <SafeAreaView style={styles.mainBody}>
-        <StatusBar backgroundColor={styles.titleContainer.backgroundColor} />
-        <View style={styles.titleContainer}>
-          <Text style={styles.titleText}>Jewellery Automation</Text>
+    <SafeAreaView style={styles.mainBody}>
+      <StatusBar backgroundColor={styles.titleContainer.backgroundColor} />
+      <View style={styles.titleContainer}>
+        <Text style={styles.titleText}>Jewellery Automation</Text>
+      </View>
+      <View style={styles.bodyContainer}>
+        <View style={styles.animation}>
+          <Lottie source={require('../assets/animations/wifiConnecting.json')} loop ref={animationRef} />
+          <TouchableHighlight
+            activeOpacity={0.6}
+            underlayColor="#2D9BF3"
+            onPress={() => {
+              connectDevice();
+            }}
+            style={
+              isConnected.bluetooth && isConnected.ble && isConnected.location
+                ? [
+                    styles.connectButton,
+                    {
+                      backgroundColor: '#2196f3',
+                    },
+                  ]
+                : [styles.connectButton, { backgroundColor: 'grey' }]
+            }>
+            <Text
+              style={{
+                color: '#d3d3d3',
+                fontFamily: 'Roboto-Regular',
+                fontSize: 20,
+              }}>
+              Connect
+            </Text>
+          </TouchableHighlight>
         </View>
-        <View style={styles.bodyContainer}>
-          <View style={styles.animation}>
-            <Lottie source={require('../assets/animations/wifiConnecting.json')} loop ref={animationRef} />
-            <TouchableHighlight
-              activeOpacity={0.6}
-              underlayColor="#2D9BF3"
-              onPress={() => {
-                ToastAndroid.show('Connecting...', 200);
-                playAnimation();
-                setTimeout(() => connectDevice(), 3000);
-              }}
-              style={(timing? [styles.connectButton,{backgroundColor: '#2196f3',}]:[styles.connectButton,{backgroundColor: 'grey',}])}>
-              <Text
-                style={{
-                  color: '#d3d3d3',
-                  fontFamily: 'Roboto-Regular',
-                  fontSize: 20,
-                }}>
-                Connect
-              </Text>
-            </TouchableHighlight>
+        {isConnected['bluetooth'] ? (
+          <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
+            <Text
+              style={{
+                fontSize: 18,
+                color: '#111',
+                fontFamily: 'Roboto-Regular',
+              }}>
+              Turning bluetooth
+            </Text>
+            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
           </View>
-          {isConnected['bluetooth'] ? (
-            <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
-              <Text style={{ fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular' }}>Turning bluetooth</Text>
-              <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
-            </View>
-          ) : (
-            <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
-              <Text style={{ fontSize: 18, color: '#ccc', fontFamily: 'Roboto-Regular' }}>Turning bluetooth</Text>
-              <ActivityIndicator color="green" size="large" />
-            </View>
-          )}
-          {isConnected['ble'] ? (
-            <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
-              <Text style={{ fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular' }}>BLE Initialization</Text>
-              <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
-            </View>
-          ) : (
-            <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
-              <Text style={{ fontSize: 18, color: '#ccc', fontFamily: 'Roboto-Regular' }}>BLE Initialization</Text>
-              <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
-            </View>
-          )}
+        ) : (
+          <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
+            <Text
+              style={{
+                fontSize: 18,
+                color: '#ccc',
+                fontFamily: 'Roboto-Regular',
+              }}>
+              Turning bluetooth
+            </Text>
+            <ActivityIndicator color="green" size="large" />
+          </View>
+        )}
+        {isConnected['ble'] ? (
+          <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
+            <Text
+              style={{
+                fontSize: 18,
+                color: '#111',
+                fontFamily: 'Roboto-Regular',
+              }}>
+              BLE Initialization
+            </Text>
+            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
+          </View>
+        ) : (
+          <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
+            <Text
+              style={{
+                fontSize: 18,
+                color: '#ccc',
+                fontFamily: 'Roboto-Regular',
+              }}>
+              BLE Initialization
+            </Text>
+            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
+          </View>
+        )}
 
-          {isConnected['location'] ? (
-            <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
-              <Text style={{ fontSize: 18, color: '#111', fontFamily: 'Roboto-Regular' }}>Location Access</Text>
-              <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
-            </View>
-          ) : (
-            <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
-              <Text style={{ fontSize: 18, color: '#ccc', fontFamily: 'Roboto-Regular' }}>Location Access</Text>
-              <ActivityIndicator color="green" size="large" />
-            </View>
-          )}
-        </View>
-      </SafeAreaView>
+        {isConnected['location'] ? (
+          <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
+            <Text
+              style={{
+                fontSize: 18,
+                color: '#111',
+                fontFamily: 'Roboto-Regular',
+              }}>
+              Location Access
+            </Text>
+            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
+          </View>
+        ) : (
+          <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
+            <Text
+              style={{
+                fontSize: 18,
+                color: '#ccc',
+                fontFamily: 'Roboto-Regular',
+              }}>
+              Location Access
+            </Text>
+            <ActivityIndicator color="green" size="large" />
+          </View>
+        )}
+      </View>
+    </SafeAreaView>
   );
 }
 

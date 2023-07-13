@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Text, View, StyleSheet, SafeAreaView, ToastAndroid, Alert, TouchableOpacity, StatusBar, Image } from 'react-native';
+import { Text, View, StyleSheet, SafeAreaView, ToastAndroid, Alert, TouchableOpacity, StatusBar } from 'react-native';
 import { faCircleStop, faCircleLeft, faCircleRight, faCircleUp, faCircleDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { AppContext } from '../Context/Context';
@@ -10,16 +10,16 @@ const ConnectedScreen = () => {
   const { isConnected, setIsConnected } = useContext(AppContext);
 
   const [buttonState, setButtonState] = useState({
-    tempup: '#62ADEA',
-    tempdown: '#62ADEA',
-    tempstop: '#62ADEA',
-    archtop: '#62ADEA',
-    archbottom: '#62ADEA',
-    archstop: '#62ADEA',
-    lotusopen: '#62ADEA',
-    lotusclose: '#62ADEA',
-    lotusstop: '#62ADEA',
-    alloff: '#62ADEA',
+    tempup: 0.75,
+    tempdown: 0.75,
+    tempstop: 0.75,
+    archtop: 0.75,
+    archbottom: 0.75,
+    archstop: 0.75,
+    lotusopen: 0.75,
+    lotusclose: 0.75,
+    lotusstop: 0.75,
+    alloff: 0.75,
   });
 
   //checks the state of bluetooth
@@ -46,45 +46,43 @@ const ConnectedScreen = () => {
         default:
           break;
       }
-      // console.log("\n Bluetooth State:",bluetoothState);
     }, true /*=emitCurrentState*/);
   }, [isConnected['bluetooth']]);
 
   const disconnectDevice = () => {
-    // ToastAndroid.show('Disconnecting...',10);
-    setIsConnected(prev => {
-      return {
-        ...prev,
-        connection: false,
-      };
-    });
-    // BleManager.disconnect('64:E8:33:DA:B9:26')
-    //   .then(() => {
-    //     // Success code
-    //     console.log('Disconnected');
-    //     //state
-    //   })
-    //   .catch(error => {
-    //     // Failure code
-    //     console.log(error);
-    //     Alert.alert("Couldn't Disconnect", `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
-    //   });
+    BleManager.disconnect('64:E8:33:DA:B9:26')
+      .then(() => {
+        // Success code
+        console.log('Disconnected');
+        ToastAndroid.show('Disconnected',1000);
+        setIsConnected(prev => {
+          return {
+            ...prev,
+            connection: false,
+          };
+        });
+      })
+      .catch(error => {
+        // Failure code
+        console.log(error);
+        Alert.alert("Couldn't Disconnect", `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
+      });
   };
 
   const sendDataToESP32 = (str, key) => {
     updatedState = {
-      tempup: '#62ADEA',
-      tempdown: '#62ADEA',
-      tempstop: '#62ADEA',
-      archtop: '#62ADEA',
-      archbottom: '#62ADEA',
-      archstop: '#62ADEA',
-      lotusopen: '#62ADEA',
-      lotusclose: '#62ADEA',
-      lotusstop: '#62ADEA',
-      alloff: '#62ADEA',
+      tempup: 0.75,
+      tempdown: 0.75,
+      tempstop: 0.75,
+      archtop: 0.75,
+      archbottom: 0.75,
+      archstop: 0.75,
+      lotusopen: 0.75,
+      lotusclose: 0.75,
+      lotusstop: 0.75,
+      alloff: 0.75,
     };
-    updatedState[key] = '#2196F3';
+    updatedState[key] = 1;
 
     setButtonState(updatedState);
 
@@ -92,15 +90,20 @@ const ConnectedScreen = () => {
     const data = str1.charCodeAt(0); //converts to ASCII
     console.log(data);
 
-    // BleManager.write('64:E8:33:DA:B9:26', '2e83cb78-c55e-4172-a529-e9597e98aa53', 'f101a3de-99aa-4375-bc5d-8e58679e267c', [data])
-    //   .then(() => {
-    //     console.log('Write: ' + data);
-    //     ToastAndroid.show('Message sent', 3000);
-    //   })
-    //   .catch(error => {
-    //     console.log('Write error:', error);
-    //     Alert.alert('Message Not Sent', `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
-    //   });
+    BleManager.write(
+      '64:E8:33:DA:B9:26',
+      '2e83cb78-c55e-4172-a529-e9597e98aa53',
+      'f101a3de-99aa-4375-bc5d-8e58679e267c',
+      [data],
+    )
+      .then(() => {
+        console.log('Write: ' + data);
+        ToastAndroid.show('Message sent', 3000);
+      })
+      .catch(error => {
+        console.log('Write error:', error);
+        Alert.alert('Message Not Sent', `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
+      });
   };
 
   return (
@@ -114,42 +117,77 @@ const ConnectedScreen = () => {
           <View style={styles.actionCard}>
             <Text style={styles.switchTxt}>Temple Switch</Text>
             <View style={styles.buttonPack}>
-              <TouchableOpacity onPress={() => sendDataToESP32('U','tempup')} style={styles.button}>
-                <FontAwesomeIcon icon={faCircleLeft} size={42} color={buttonState.tempup} />
+              <TouchableOpacity onPress={() => sendDataToESP32('U', 'tempup')} style={styles.button}>
+                <FontAwesomeIcon icon={faCircleUp} size={42} color="#2196F3" style={{ opacity: buttonState.tempup }} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('F','tempstop')} style={styles.button}>
-                <FontAwesomeIcon icon={faCircleStop} size={42} color={buttonState.tempstop} />
+              <TouchableOpacity onPress={() => sendDataToESP32('F', 'tempstop')} style={styles.button}>
+                <FontAwesomeIcon
+                  icon={faCircleStop}
+                  size={42}
+                  color="#2196F3"
+                  style={{ opacity: buttonState.tempstop }}
+                />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('D','tempdown')} style={styles.button}>
-                <FontAwesomeIcon icon={faCircleRight} size={42} color={buttonState.tempdown} />
+              <TouchableOpacity onPress={() => sendDataToESP32('D', 'tempdown')} style={styles.button}>
+                <FontAwesomeIcon
+                  icon={faCircleDown}
+                  size={42}
+                  color="#2196F3"
+                  style={{ opacity: buttonState.tempdown }}
+                />
               </TouchableOpacity>
             </View>
           </View>
           <View style={styles.actionCard}>
             <Text style={styles.switchTxt}>Arch Switch</Text>
             <View style={styles.buttonPack}>
-              <TouchableOpacity onPress={() => sendDataToESP32('T','archtop')} style={styles.button}>
-                <FontAwesomeIcon icon={faCircleLeft} size={42} color={buttonState.archtop} />
+              <TouchableOpacity onPress={() => sendDataToESP32('T', 'archtop')} style={styles.button}>
+                <FontAwesomeIcon icon={faCircleUp} size={42} color="#2196F3" style={{ opacity: buttonState.archtop }} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('F','archstop')} style={styles.button}>
-                <FontAwesomeIcon icon={faCircleStop} size={42} color={buttonState.archstop} />
+              <TouchableOpacity onPress={() => sendDataToESP32('F', 'archstop')} style={styles.button}>
+                <FontAwesomeIcon
+                  icon={faCircleStop}
+                  size={42}
+                  color="#2196F3"
+                  style={{ opacity: buttonState.archstop }}
+                />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => sendDataToESP32('B', 'archbottom')} style={styles.button}>
-                <FontAwesomeIcon icon={faCircleRight} size={42} color={buttonState.archbottom} />
+                <FontAwesomeIcon
+                  icon={faCircleDown}
+                  size={42}
+                  color="#2196F3"
+                  style={{ opacity: buttonState.archbottom }}
+                />
               </TouchableOpacity>
             </View>
           </View>
           <View style={styles.actionCard}>
             <Text style={styles.switchTxt}>Lotus Switch</Text>
             <View style={styles.buttonPack}>
-              <TouchableOpacity onPress={() => sendDataToESP32('O','lotusopen')} style={styles.button}>
-                <FontAwesomeIcon icon={faCircleLeft} size={42} color={buttonState.lotusopen} />
+              <TouchableOpacity onPress={() => sendDataToESP32('O', 'lotusopen')} style={styles.button}>
+                <FontAwesomeIcon
+                  icon={faCircleUp}
+                  size={42}
+                  color="#2196F3"
+                  style={{ opacity: buttonState.lotusopen }}
+                />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('F','lotusstop')} style={styles.button}>
-                <FontAwesomeIcon icon={faCircleStop} size={42} color={buttonState.lotusstop} />
+              <TouchableOpacity onPress={() => sendDataToESP32('F', 'lotusstop')} style={styles.button}>
+                <FontAwesomeIcon
+                  icon={faCircleStop}
+                  size={42}
+                  color="#2196F3"
+                  style={{ opacity: buttonState.lotusstop }}
+                />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('C','lotusclose')} style={styles.button}>
-                <FontAwesomeIcon icon={faCircleRight} size={42} color={buttonState.lotusclose} />
+              <TouchableOpacity onPress={() => sendDataToESP32('C', 'lotusclose')} style={styles.button}>
+                <FontAwesomeIcon
+                  icon={faCircleDown}
+                  size={42}
+                  color="#2196F3"
+                  style={{ opacity: buttonState.lotusclose }}
+                />
               </TouchableOpacity>
             </View>
           </View>
