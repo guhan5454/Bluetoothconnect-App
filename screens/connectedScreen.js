@@ -54,7 +54,7 @@ const ConnectedScreen = () => {
       .then(() => {
         // Success code
         console.log('Disconnected');
-        ToastAndroid.show('Disconnected',1000);
+        ToastAndroid.show('Disconnected', 1000);
         setIsConnected(prev => {
           return {
             ...prev,
@@ -219,8 +219,8 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     width: '100%',
-    // borderBottomRightRadius: 55,
-    // borderBottomLeftRadius: 55,
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
     height: '10%',
     padding: '5%',
     paddingTop: '3%',

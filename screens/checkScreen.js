@@ -245,7 +245,7 @@ export default function checkScreen() {
                 color: '#ccc',
                 fontFamily: 'Roboto-Regular',
               }}>
-              Turning bluetooth
+              Bluetooth Status
             </Text>
             <ActivityIndicator color="green" size="large" />
           </View>
@@ -314,8 +314,8 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     width: '100%',
-    // borderBottomRightRadius: 55,
-    // borderBottomLeftRadius: 55,
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
     height: '10%',
     padding: '5%',
     paddingTop: '3%',
