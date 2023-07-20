@@ -120,7 +120,7 @@ const ConnectedScreen = () => {
               <TouchableOpacity onPress={() => sendDataToESP32('U', 'tempup')} style={styles.button}>
                 <FontAwesomeIcon icon={faCircleUp} size={42} color="#2196F3" style={{ opacity: buttonState.tempup }} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('F', 'tempstop')} style={styles.button}>
+              <TouchableOpacity onPress={() => sendDataToESP32('S', 'tempstop')} style={styles.button}>
                 <FontAwesomeIcon
                   icon={faCircleStop}
                   size={42}
@@ -144,7 +144,7 @@ const ConnectedScreen = () => {
               <TouchableOpacity onPress={() => sendDataToESP32('T', 'archtop')} style={styles.button}>
                 <FontAwesomeIcon icon={faCircleUp} size={42} color="#2196F3" style={{ opacity: buttonState.archtop }} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('F', 'archstop')} style={styles.button}>
+              <TouchableOpacity onPress={() => sendDataToESP32('A', 'archstop')} style={styles.button}>
                 <FontAwesomeIcon
                   icon={faCircleStop}
                   size={42}
@@ -173,7 +173,7 @@ const ConnectedScreen = () => {
                   style={{ opacity: buttonState.lotusopen }}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('F', 'lotusstop')} style={styles.button}>
+              <TouchableOpacity onPress={() => sendDataToESP32('L', 'lotusstop')} style={styles.button}>
                 <FontAwesomeIcon
                   icon={faCircleStop}
                   size={42}
