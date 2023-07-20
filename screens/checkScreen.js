@@ -85,6 +85,7 @@ export default function checkScreen() {
   };
 
   useEffect(() => {
+    if(Platform.OS === "android"){
     //request required permissions
     PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT)
       .then(res => {
@@ -119,7 +120,7 @@ export default function checkScreen() {
             });
           }
         });
-      }) //turn on bluetooth if it is off
+      })//turn on bluetooth if it is off
       .then(res => {
         return BleManager.enableBluetooth();
       })
@@ -141,6 +142,7 @@ export default function checkScreen() {
           },
         ]);
       });
+    }
     // start bluetooth manager
     BleManager.start({ showAlert: false }).then(() => {
       console.log('BLE Manager initialized');
