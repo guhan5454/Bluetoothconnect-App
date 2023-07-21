@@ -20,7 +20,7 @@ const ConnectedScreen = () => {
     lotusclose: 0.75,
     lotusstop: 0.75,
     alloff: 0.75,
-    allon: 0.75
+    allon: 0.75,
   });
 
   //checks the state of bluetooth
@@ -84,17 +84,17 @@ const ConnectedScreen = () => {
       alloff: 0.75,
       allon: 0.75,
     };
-    if(buttonState[key] === 1){
+    if (buttonState[key] === 1) {
       ToastAndroid.show('Button already pressed', 3000);
-    }else{
+    } else {
       updatedState[key] = 1;
 
       setButtonState(updatedState);
-  
+
       const str1 = str;
       const data = str1.charCodeAt(0); //converts to ASCII
       console.log(data);
-  
+
       // BleManager.write(
       //   '64:E8:33:DA:B9:26',
       //   '2e83cb78-c55e-4172-a529-e9597e98aa53',
@@ -123,10 +123,14 @@ const ConnectedScreen = () => {
           <View style={styles.actionCard}>
             <Text style={styles.switchTxt}>Temple Switch</Text>
             <View style={styles.buttonPack}>
-              <TouchableOpacity onPress={() => sendDataToESP32('U', 'tempup')} style={[styles.button,{opacity:buttonState['tempup']}]}>
+              <TouchableOpacity
+                onPress={() => sendDataToESP32('U', 'tempup')}
+                style={[styles.button, { opacity: buttonState['tempup'] }]}>
                 <FontAwesomeIcon icon={faCircleUp} size={42} color="#2196F3" style={{ opacity: buttonState.tempup }} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('S', 'tempstop')} style={[styles.button,{opacity:buttonState['tempstop']}]}>
+              <TouchableOpacity
+                onPress={() => sendDataToESP32('S', 'tempstop')}
+                style={[styles.button, { opacity: buttonState['tempstop'] }]}>
                 <FontAwesomeIcon
                   icon={faCircleStop}
                   size={42}
@@ -134,7 +138,9 @@ const ConnectedScreen = () => {
                   style={{ opacity: buttonState.tempstop }}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('D', 'tempdown')} style={[styles.button,{opacity:buttonState['tempdown']}]}>
+              <TouchableOpacity
+                onPress={() => sendDataToESP32('D', 'tempdown')}
+                style={[styles.button, { opacity: buttonState['tempdown'] }]}>
                 <FontAwesomeIcon
                   icon={faCircleDown}
                   size={42}
@@ -147,10 +153,14 @@ const ConnectedScreen = () => {
           <View style={styles.actionCard}>
             <Text style={styles.switchTxt}>Arch Switch</Text>
             <View style={styles.buttonPack}>
-              <TouchableOpacity onPress={() => sendDataToESP32('T', 'archtop')} style={[styles.button,{opacity:buttonState['archtop']}]}>
+              <TouchableOpacity
+                onPress={() => sendDataToESP32('T', 'archtop')}
+                style={[styles.button, { opacity: buttonState['archtop'] }]}>
                 <FontAwesomeIcon icon={faCircleUp} size={42} color="#2196F3" style={{ opacity: buttonState.archtop }} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('A', 'archstop')} style={[styles.button,{opacity:buttonState['archstop']}]}>
+              <TouchableOpacity
+                onPress={() => sendDataToESP32('A', 'archstop')}
+                style={[styles.button, { opacity: buttonState['archstop'] }]}>
                 <FontAwesomeIcon
                   icon={faCircleStop}
                   size={42}
@@ -158,7 +168,9 @@ const ConnectedScreen = () => {
                   style={{ opacity: buttonState.archstop }}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('B', 'archbottom')} style={[styles.button,{opacity:buttonState['archbottom']}]}>
+              <TouchableOpacity
+                onPress={() => sendDataToESP32('B', 'archbottom')}
+                style={[styles.button, { opacity: buttonState['archbottom'] }]}>
                 <FontAwesomeIcon
                   icon={faCircleDown}
                   size={42}
@@ -171,7 +183,9 @@ const ConnectedScreen = () => {
           <View style={styles.actionCard}>
             <Text style={styles.switchTxt}>Lotus Switch</Text>
             <View style={styles.buttonPack}>
-              <TouchableOpacity onPress={() => sendDataToESP32('O', 'lotusopen')} style={[styles.button,{opacity:buttonState['lotusopen']}]}>
+              <TouchableOpacity
+                onPress={() => sendDataToESP32('O', 'lotusopen')}
+                style={[styles.button, { opacity: buttonState['lotusopen'] }]}>
                 <FontAwesomeIcon
                   icon={faCircleUp}
                   size={42}
@@ -179,7 +193,9 @@ const ConnectedScreen = () => {
                   style={{ opacity: buttonState.lotusopen }}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('L', 'lotusstop')} style={[styles.button,{opacity:buttonState['lotusstop']}]}>
+              <TouchableOpacity
+                onPress={() => sendDataToESP32('L', 'lotusstop')}
+                style={[styles.button, { opacity: buttonState['lotusstop'] }]}>
                 <FontAwesomeIcon
                   icon={faCircleStop}
                   size={42}
@@ -187,7 +203,9 @@ const ConnectedScreen = () => {
                   style={{ opacity: buttonState.lotusstop }}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('C', 'lotusclose')} style={[styles.button,{opacity:buttonState['lotusclose']}]}>
+              <TouchableOpacity
+                onPress={() => sendDataToESP32('C', 'lotusclose')}
+                style={[styles.button, { opacity: buttonState['lotusclose'] }]}>
                 <FontAwesomeIcon
                   icon={faCircleDown}
                   size={42}
@@ -199,19 +217,19 @@ const ConnectedScreen = () => {
           </View>
           <View style={styles.allContainer}>
             <TouchableOpacity
-            onPress={() => {
-              sendDataToESP32('F');
-            }}
-            style={[styles.allConnectCard,{opacity:buttonState['alloff']}]}>
-            <Text style={styles.switchTxt}>All Off</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              sendDataToESP32('G');
-            }}
-            style={[styles.allConnectCard,{opacity:buttonState['allon']}]}>
-            <Text style={styles.switchTxt}>All On</Text>
-          </TouchableOpacity>
+              onPress={() => {
+                sendDataToESP32('F');
+              }}
+              style={[styles.allConnectCard, { opacity: buttonState['alloff'] }]}>
+              <Text style={styles.switchTxt}>All Off</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                sendDataToESP32('G');
+              }}
+              style={[styles.allConnectCard, { opacity: buttonState['allon'] }]}>
+              <Text style={styles.switchTxt}>All On</Text>
+            </TouchableOpacity>
           </View>
           <TouchableOpacity
             onPress={() => {
@@ -292,26 +310,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 25,
-    paddingHorizontal: '33%'
+    paddingHorizontal: '33%',
   },
-  allConnectCard:{
+  allConnectCard: {
     elevation: 2,
     backgroundColor: '#E4E4E4',
     marginHorizontal: '1%',
     justifyContent: 'center',
     borderRadius: 25,
-    paddingHorizontal: '15.5%'
+    paddingHorizontal: '15.5%',
   },
   image: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  allContainer:{
-    flexDirection:'row',
-    marginVertical:'3%',
-    height:'10%',
-  }
+  allContainer: {
+    flexDirection: 'row',
+    marginVertical: '3%',
+    height: '10%',
+  },
 });
 
 export default ConnectedScreen;
