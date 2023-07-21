@@ -20,6 +20,7 @@ const ConnectedScreen = () => {
     lotusclose: 0.75,
     lotusstop: 0.75,
     alloff: 0.75,
+    allon: 0.75
   });
 
   //checks the state of bluetooth
@@ -81,29 +82,34 @@ const ConnectedScreen = () => {
       lotusclose: 0.75,
       lotusstop: 0.75,
       alloff: 0.75,
+      allon: 0.75,
     };
-    updatedState[key] = 1;
+    if(buttonState[key] === 1){
+      ToastAndroid.show('Button already pressed', 3000);
+    }else{
+      updatedState[key] = 1;
 
-    setButtonState(updatedState);
-
-    const str1 = str;
-    const data = str1.charCodeAt(0); //converts to ASCII
-    console.log(data);
-
-    BleManager.write(
-      '64:E8:33:DA:B9:26',
-      '2e83cb78-c55e-4172-a529-e9597e98aa53',
-      'f101a3de-99aa-4375-bc5d-8e58679e267c',
-      [data],
-    )
-      .then(() => {
-        console.log('Write: ' + data);
-        ToastAndroid.show('Message sent', 3000);
-      })
-      .catch(error => {
-        console.log('Write error:', error);
-        Alert.alert('Message Not Sent', `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
-      });
+      setButtonState(updatedState);
+  
+      const str1 = str;
+      const data = str1.charCodeAt(0); //converts to ASCII
+      console.log(data);
+  
+      // BleManager.write(
+      //   '64:E8:33:DA:B9:26',
+      //   '2e83cb78-c55e-4172-a529-e9597e98aa53',
+      //   'f101a3de-99aa-4375-bc5d-8e58679e267c',
+      //   [data],
+      // )
+      //   .then(() => {
+      //     console.log('Write: ' + data);
+      //     ToastAndroid.show('Message sent', 3000);
+      //   })
+      //   .catch(error => {
+      //     console.log('Write error:', error);
+      //     Alert.alert('Message Not Sent', `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
+      //   });
+    }
   };
 
   return (
@@ -117,10 +123,10 @@ const ConnectedScreen = () => {
           <View style={styles.actionCard}>
             <Text style={styles.switchTxt}>Temple Switch</Text>
             <View style={styles.buttonPack}>
-              <TouchableOpacity onPress={() => sendDataToESP32('U', 'tempup')} style={styles.button}>
+              <TouchableOpacity onPress={() => sendDataToESP32('U', 'tempup')} style={[styles.button,{opacity:buttonState['tempup']}]}>
                 <FontAwesomeIcon icon={faCircleUp} size={42} color="#2196F3" style={{ opacity: buttonState.tempup }} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('S', 'tempstop')} style={styles.button}>
+              <TouchableOpacity onPress={() => sendDataToESP32('S', 'tempstop')} style={[styles.button,{opacity:buttonState['tempstop']}]}>
                 <FontAwesomeIcon
                   icon={faCircleStop}
                   size={42}
@@ -128,7 +134,7 @@ const ConnectedScreen = () => {
                   style={{ opacity: buttonState.tempstop }}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('D', 'tempdown')} style={styles.button}>
+              <TouchableOpacity onPress={() => sendDataToESP32('D', 'tempdown')} style={[styles.button,{opacity:buttonState['tempdown']}]}>
                 <FontAwesomeIcon
                   icon={faCircleDown}
                   size={42}
@@ -141,10 +147,10 @@ const ConnectedScreen = () => {
           <View style={styles.actionCard}>
             <Text style={styles.switchTxt}>Arch Switch</Text>
             <View style={styles.buttonPack}>
-              <TouchableOpacity onPress={() => sendDataToESP32('T', 'archtop')} style={styles.button}>
+              <TouchableOpacity onPress={() => sendDataToESP32('T', 'archtop')} style={[styles.button,{opacity:buttonState['archtop']}]}>
                 <FontAwesomeIcon icon={faCircleUp} size={42} color="#2196F3" style={{ opacity: buttonState.archtop }} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('A', 'archstop')} style={styles.button}>
+              <TouchableOpacity onPress={() => sendDataToESP32('A', 'archstop')} style={[styles.button,{opacity:buttonState['archstop']}]}>
                 <FontAwesomeIcon
                   icon={faCircleStop}
                   size={42}
@@ -152,7 +158,7 @@ const ConnectedScreen = () => {
                   style={{ opacity: buttonState.archstop }}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('B', 'archbottom')} style={styles.button}>
+              <TouchableOpacity onPress={() => sendDataToESP32('B', 'archbottom')} style={[styles.button,{opacity:buttonState['archbottom']}]}>
                 <FontAwesomeIcon
                   icon={faCircleDown}
                   size={42}
@@ -165,7 +171,7 @@ const ConnectedScreen = () => {
           <View style={styles.actionCard}>
             <Text style={styles.switchTxt}>Lotus Switch</Text>
             <View style={styles.buttonPack}>
-              <TouchableOpacity onPress={() => sendDataToESP32('O', 'lotusopen')} style={styles.button}>
+              <TouchableOpacity onPress={() => sendDataToESP32('O', 'lotusopen')} style={[styles.button,{opacity:buttonState['lotusopen']}]}>
                 <FontAwesomeIcon
                   icon={faCircleUp}
                   size={42}
@@ -173,7 +179,7 @@ const ConnectedScreen = () => {
                   style={{ opacity: buttonState.lotusopen }}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('L', 'lotusstop')} style={styles.button}>
+              <TouchableOpacity onPress={() => sendDataToESP32('L', 'lotusstop')} style={[styles.button,{opacity:buttonState['lotusstop']}]}>
                 <FontAwesomeIcon
                   icon={faCircleStop}
                   size={42}
@@ -181,7 +187,7 @@ const ConnectedScreen = () => {
                   style={{ opacity: buttonState.lotusstop }}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => sendDataToESP32('C', 'lotusclose')} style={styles.button}>
+              <TouchableOpacity onPress={() => sendDataToESP32('C', 'lotusclose')} style={[styles.button,{opacity:buttonState['lotusclose']}]}>
                 <FontAwesomeIcon
                   icon={faCircleDown}
                   size={42}
@@ -191,18 +197,27 @@ const ConnectedScreen = () => {
               </TouchableOpacity>
             </View>
           </View>
-          <TouchableOpacity
+          <View style={styles.allContainer}>
+            <TouchableOpacity
             onPress={() => {
               sendDataToESP32('F');
             }}
-            style={[styles.disconnectCard, { paddingHorizontal: '39%' }]}>
+            style={[styles.allConnectCard,{opacity:buttonState['alloff']}]}>
             <Text style={styles.switchTxt}>All Off</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
+              sendDataToESP32('G');
+            }}
+            style={[styles.allConnectCard,{opacity:buttonState['allon']}]}>
+            <Text style={styles.switchTxt}>All On</Text>
+          </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            onPress={() => {
               disconnectDevice();
             }}
-            style={[styles.disconnectCard, { paddingHorizontal: '33%' }]}>
+            style={styles.disconnectCard}>
             <Text style={styles.switchTxt}>Disconnect</Text>
           </TouchableOpacity>
         </View>
@@ -270,19 +285,33 @@ const styles = StyleSheet.create({
   },
   disconnectCard: {
     opacity: 0.9,
-    elevation: 2,
+    elevation: 1.5,
     backgroundColor: '#E4E4E4',
     height: '10%',
     marginVertical: '3%',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 25,
+    paddingHorizontal: '33%'
+  },
+  allConnectCard:{
+    elevation: 2,
+    backgroundColor: '#E4E4E4',
+    marginHorizontal: '1%',
+    justifyContent: 'center',
+    borderRadius: 25,
+    paddingHorizontal: '15.5%'
   },
   image: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  allContainer:{
+    flexDirection:'row',
+    marginVertical:'3%',
+    height:'10%',
+  }
 });
 
 export default ConnectedScreen;
