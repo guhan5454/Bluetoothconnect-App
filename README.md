@@ -4,6 +4,26 @@ This is a new [**React Native**](https://reactnative.dev) project, bootstrapped 
 
 >**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
 
+After cloning the app, make sure you replace the UUID with your device's UUID in checkScreen.js and connectedScreen.js
+
+const connectDevice = () => {
+    if (isConnected.bluetooth && isConnected.ble && isConnected.location) {
+      ToastAndroid.show('Connecting...', 200);
+      playAnimation();
+      setTimeout(() => {
+        BleManager.connect('64:E8:33:DA:B9:26')
+          .then(() => {
+            // Success code
+            ToastAndroid.show('Connected', 1000);
+            console.log('Connected');
+            setIsConnected(prev => {
+              return {
+                ...prev,
+                connection: true,
+              };
+            });
+          })
+
 ## Step 1: Start the Metro Server
 
 First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
