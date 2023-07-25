@@ -3,10 +3,11 @@ import {
   View,
   Platform,
   StyleSheet,
-  SafeAreaView,
+  ImageBackground,
   NativeModules,
   Alert,
-  TouchableHighlight,
+  Image,
+  TouchableOpacity,
   NativeEventEmitter,
   PermissionsAndroid,
   ActivityIndicator,
@@ -20,6 +21,7 @@ import Lottie from 'lottie-react-native';
 import BleManager from 'react-native-ble-manager';
 import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 import { AppContext } from '../Context/Context';
+import LinearGradient from 'react-native-linear-gradient';
 
 const BleManagerModule = NativeModules.BleManager;
 const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -36,13 +38,17 @@ export default function checkScreen() {
 
   const connectDevice = () => {
     if (isConnected.bluetooth && isConnected.ble && isConnected.location) {
-      ToastAndroid.show('Connecting...', 200);
+      if (Platform.OS === 'android') {
+        ToastAndroid.show('Connecting...', 200);
+      }
       playAnimation();
       setTimeout(() => {
         BleManager.connect('64:E8:33:DA:B9:26')
           .then(() => {
             // Success code
-            ToastAndroid.show('Connected', 1000);
+            if (Platform.OS === 'android') {
+              ToastAndroid.show('Connected', 1000);
+            }
             console.log('Connected');
             setIsConnected(prev => {
               return {
@@ -56,7 +62,7 @@ export default function checkScreen() {
             console.log(error);
             Alert.alert("Couldn't Connect", `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
           });
-      }, 2000);
+      }, 5000);
     } else if (!isConnected.bluetooth) {
       Alert.alert('Bluetooth turned off', 'Turn on bluetooth and try again', [
         {
@@ -193,42 +199,54 @@ export default function checkScreen() {
   }, [isConnected['bluetooth']]);
 
   return (
-    <SafeAreaView style={styles.mainBody}>
-      <StatusBar backgroundColor={styles.titleContainer.backgroundColor} />
-      <View style={styles.titleContainer}>
-        <Text style={styles.titleText}>Jewellery Automation</Text>
-      </View>
+    <ImageBackground style={styles.mainBody} source={require('../assets/bg5.jpg')} resizeMode="cover">
+      <StatusBar hidden={true} backgroundColor={styles.titleContainer.backgroundColor} />
+      <LinearGradient
+        style={styles.titleContainer}
+        colors={['#e4abce', '#bd7580']}
+        locations={[0, 0.7]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}>
+        {/* <Text style={styles.titleText}>Jewellery Automation</Text> */}
+        <Image source={require('../assets/logo.png')} style={styles.logo} />
+      </LinearGradient>
       <View style={styles.bodyContainer}>
         <View style={styles.animation}>
-          <Lottie source={require('../assets/animations/wifiConnecting.json')} loop ref={animationRef} />
-          <TouchableHighlight
+          <Lottie source={require('../assets/animations/pulse.json')} loop ref={animationRef} />
+          <TouchableOpacity
             activeOpacity={0.6}
             underlayColor="#2D9BF3"
             onPress={() => {
               connectDevice();
-            }}
-            style={
-              isConnected.bluetooth && isConnected.ble && isConnected.location
-                ? [
-                    styles.connectButton,
-                    {
-                      backgroundColor: '#2196f3',
-                    },
-                  ]
-                : [styles.connectButton, { backgroundColor: 'grey' }]
-            }>
-            <Text
-              style={{
-                color: '#d3d3d3',
-                fontFamily: 'Roboto-Regular',
-                fontSize: 20,
-              }}>
-              Connect
-            </Text>
-          </TouchableHighlight>
+            }}>
+            <LinearGradient
+              colors={['#e4abce', '#bd7580']}
+              locations={[0, 0.7]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={
+                isConnected.bluetooth && isConnected.ble && isConnected.location
+                  ? [
+                      styles.connectButton,
+                      {
+                        backgroundColor: '#fff',
+                      },
+                    ]
+                  : [styles.connectButton, { backgroundColor: '#fff' }]
+              }>
+              <Text
+                style={{
+                  color: '#ffffff',
+                  fontFamily: 'Roboto-Regular',
+                  fontSize: 20,
+                }}>
+                Connect
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
         {isConnected['bluetooth'] ? (
-          <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
+          <View style={[styles.connectionbar, { backgroundColor: '#fff', marginTop: '10%' }]}>
             <Text
               style={{
                 fontSize: 18,
@@ -237,10 +255,10 @@ export default function checkScreen() {
               }}>
               Turning bluetooth
             </Text>
-            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
+            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#73be73" />
           </View>
         ) : (
-          <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
+          <View style={[styles.connectionbar, { backgroundColor: '#e7eef8', marginTop: '10%' }]}>
             <Text
               style={{
                 fontSize: 18,
@@ -253,7 +271,7 @@ export default function checkScreen() {
           </View>
         )}
         {isConnected['ble'] ? (
-          <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
+          <View style={[styles.connectionbar, { backgroundColor: '#fff' }]}>
             <Text
               style={{
                 fontSize: 18,
@@ -262,10 +280,10 @@ export default function checkScreen() {
               }}>
               BLE Initialization
             </Text>
-            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
+            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#73be73" />
           </View>
         ) : (
-          <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
+          <View style={[styles.connectionbar, { backgroundColor: '#e7eef8' }]}>
             <Text
               style={{
                 fontSize: 18,
@@ -274,12 +292,12 @@ export default function checkScreen() {
               }}>
               BLE Initialization
             </Text>
-            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
+            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#73be73" />
           </View>
         )}
 
         {isConnected['location'] ? (
-          <View style={[styles.connectionbar, { backgroundColor: '#E1DCDC' }]}>
+          <View style={[styles.connectionbar, { backgroundColor: '#fff' }]}>
             <Text
               style={{
                 fontSize: 18,
@@ -288,10 +306,10 @@ export default function checkScreen() {
               }}>
               Location Access
             </Text>
-            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#005c4b" style={{ opacity: 0.9 }} />
+            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#73be73" />
           </View>
         ) : (
-          <View style={[styles.connectionbar, { backgroundColor: '#BBB' }]}>
+          <View style={[styles.connectionbar, { backgroundColor: '#e7eef8' }]}>
             <Text
               style={{
                 fontSize: 18,
@@ -304,7 +322,7 @@ export default function checkScreen() {
           </View>
         )}
       </View>
-    </SafeAreaView>
+    </ImageBackground>
   );
 }
 
@@ -312,19 +330,21 @@ const styles = StyleSheet.create({
   mainBody: {
     flex: 1,
     height: '100%',
-    backgroundColor: '#d3d3d3',
   },
   titleContainer: {
+    elevation: 20,
     width: '100%',
-    borderBottomRightRadius: 20,
-    borderBottomLeftRadius: 20,
-    height: '10%',
-    padding: '5%',
-    paddingTop: '3%',
-    backgroundColor: '#2196F3',
+    borderBottomRightRadius: 30,
+    borderBottomLeftRadius: 30,
+    height: '13%',
+    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: '5%',
+  },
+  logo: {
+    resizeMode: 'contain',
+    width: '70%',
+    height: '100%',
   },
   titleText: {
     fontFamily: 'Roboto-Medium',
@@ -334,14 +354,12 @@ const styles = StyleSheet.create({
   },
   bodyContainer: {
     flex: 0.5,
-    // backgroundColor: 'black',
     paddingTop: 100,
-    // height: '40%',
     justifyContent: 'center',
     alignItems: 'center',
   },
   animation: {
-    // position: 'absolute',
+    marginTop: '45%',
     alignItems: 'center',
     justifyContent: 'center',
     height: '100%',
@@ -349,8 +367,8 @@ const styles = StyleSheet.create({
   },
   connectionbar: {
     elevation: 5,
+    opacity: 0.8,
     flexDirection: 'row',
-    backgroundColor: '#DCDADA',
     height: '25%',
     width: '80%',
     justifyContent: 'space-evenly',
@@ -359,13 +377,13 @@ const styles = StyleSheet.create({
     margin: '2%',
   },
   connectButton: {
-    elevation: 5,
+    elevation: 3,
     width: 150,
     height: 150,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
     borderRadius: 100,
-    // opacity: 0.95,
+    opacity: 0.95,
   },
 });
