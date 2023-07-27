@@ -71,8 +71,8 @@
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>App would like to use Bluetooth to connect to device</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>We need access to your location to connect to the microcontroller while the app is in the background.</string>
+	<string>iAutomate need access to your location to connect to the microcontroller while the app is in the background.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>We need access to your location to connect to the microcontroller while the app is in the background.</string>
+	<string>iAutomate need access to your location to connect to the microcontroller while the app is in the background.</string>
 </dict>
 </plist>

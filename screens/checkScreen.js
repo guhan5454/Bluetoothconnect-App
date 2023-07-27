@@ -199,54 +199,22 @@ export default function checkScreen() {
   }, [isConnected['bluetooth']]);
 
   return (
-    <ImageBackground style={styles.mainBody} source={require('../assets/bg5.jpg')} resizeMode="cover">
+    <ImageBackground style={styles.mainBody} source={require('../assets/gradient.png')} resizeMode="cover">
       <StatusBar hidden={true} backgroundColor={styles.titleContainer.backgroundColor} />
-      <LinearGradient
+      {/* <LinearGradient
         style={styles.titleContainer}
-        colors={['#e4abce', '#bd7580']}
+        colors={['#D68E6A', '#CC5D45']}
         locations={[0, 0.7]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}>
         {/* <Text style={styles.titleText}>Jewellery Automation</Text> */}
-        <Image source={require('../assets/logo.png')} style={styles.logo} />
-      </LinearGradient>
+      {/*</LinearGradient> */}
+      <View style={styles.imageContainer}>
+      <Image source={require('../assets/logo2.png')} style={styles.logo} />
+      </View>
       <View style={styles.bodyContainer}>
-        <View style={styles.animation}>
-          <Lottie source={require('../assets/animations/pulse.json')} loop ref={animationRef} />
-          <TouchableOpacity
-            activeOpacity={0.6}
-            underlayColor="#2D9BF3"
-            onPress={() => {
-              connectDevice();
-            }}>
-            <LinearGradient
-              colors={['#e4abce', '#bd7580']}
-              locations={[0, 0.7]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={
-                isConnected.bluetooth && isConnected.ble && isConnected.location
-                  ? [
-                      styles.connectButton,
-                      {
-                        backgroundColor: '#fff',
-                      },
-                    ]
-                  : [styles.connectButton, { backgroundColor: '#fff' }]
-              }>
-              <Text
-                style={{
-                  color: '#ffffff',
-                  fontFamily: 'Roboto-Regular',
-                  fontSize: 20,
-                }}>
-                Connect
-              </Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
         {isConnected['bluetooth'] ? (
-          <View style={[styles.connectionbar, { backgroundColor: '#fff', marginTop: '10%' }]}>
+          <View style={[styles.connectionbar, { backgroundColor: '#fff' }]}>
             <Text
               style={{
                 fontSize: 18,
@@ -258,7 +226,7 @@ export default function checkScreen() {
             <FontAwesomeIcon icon={faCircleCheck} size={30} color="#73be73" />
           </View>
         ) : (
-          <View style={[styles.connectionbar, { backgroundColor: '#e7eef8', marginTop: '10%' }]}>
+          <View style={[styles.connectionbar, { backgroundColor: '#e7eef8' }]}>
             <Text
               style={{
                 fontSize: 18,
@@ -268,31 +236,6 @@ export default function checkScreen() {
               Bluetooth Status
             </Text>
             <ActivityIndicator color="green" size="large" />
-          </View>
-        )}
-        {isConnected['ble'] ? (
-          <View style={[styles.connectionbar, { backgroundColor: '#fff' }]}>
-            <Text
-              style={{
-                fontSize: 18,
-                color: '#111',
-                fontFamily: 'Roboto-Regular',
-              }}>
-              BLE Initialization
-            </Text>
-            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#73be73" />
-          </View>
-        ) : (
-          <View style={[styles.connectionbar, { backgroundColor: '#e7eef8' }]}>
-            <Text
-              style={{
-                fontSize: 18,
-                color: '#ccc',
-                fontFamily: 'Roboto-Regular',
-              }}>
-              BLE Initialization
-            </Text>
-            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#73be73" />
           </View>
         )}
 
@@ -321,7 +264,45 @@ export default function checkScreen() {
             <ActivityIndicator color="green" size="large" />
           </View>
         )}
-      </View>
+        <View style={styles.wholeAnimation}>
+        <Lottie source={require('../assets/animations/orangeanimation.json')} loop ref={animationRef} style={{position:'absolute', marginTop:30}}  /> 
+        <View style={{justifyContent:'center', alignItems:'center', marginTop:100}}>
+        <TouchableOpacity
+            style={styles.connectButton}
+            activeOpacity={0.6}
+            underlayColor="#FDFCEE"
+            onPress={() => {
+              connectDevice();
+            }}>
+            <LinearGradient
+              colors={['#f0b52b', '#e67446']}
+              locations={[0, 0.7]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={
+                isConnected.bluetooth && isConnected.ble && isConnected.location
+                  ? [
+                      styles.connectButton,
+                      {
+                        backgroundColor: '#fff',
+                      },
+                    ]
+                  : [styles.connectButton, { backgroundColor: '#fff' }]
+              }>
+              <Text
+                style={{
+                  color: 'black',
+                  fontFamily: 'Roboto-Regular',
+                  fontSize: 20,
+                }}>
+                Connect
+              </Text>
+            {/* </LinearGradient> */}
+          </LinearGradient>
+          </TouchableOpacity>
+          </View>
+        </View>
+        </View>
     </ImageBackground>
   );
 }
@@ -341,10 +322,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  imageContainer:{
+    justifyContent:'center',
+    alignItems: 'center',
+    height:'30%',
+  },  
   logo: {
     resizeMode: 'contain',
     width: '70%',
-    height: '100%',
+    height: '70%',
   },
   titleText: {
     fontFamily: 'Roboto-Medium',
@@ -353,33 +339,49 @@ const styles = StyleSheet.create({
     marginBottom: '2%',
   },
   bodyContainer: {
-    flex: 0.5,
-    paddingTop: 100,
-    justifyContent: 'center',
+    flex: 1,
+    paddingTop:50,
+    backgroundColor:'#fff',
+    justifyContent:'flex-start',
     alignItems: 'center',
+    borderTopRightRadius:35,
+    borderTopLeftRadius:35,
   },
   animation: {
-    marginTop: '45%',
+    // marginBottom: '5%',
     alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-    width: '100%',
+    // justifyContent: 'center',
+    height: 300,
+    width: 100,
+  },
+  wholeAnimation: {
+    position:'relative',
+    height:'100%',
+    width:'100%',
+    // marginTop:150,
+    paddingBottom:50,
+    justifyContent:'center',
+    alignContent:'center'
   },
   connectionbar: {
     elevation: 5,
     opacity: 0.8,
     flexDirection: 'row',
-    height: '25%',
+    height: '15%',
     width: '80%',
     justifyContent: 'space-evenly',
     alignItems: 'center',
     borderRadius: 20,
-    margin: '2%',
+    marginVertical: 19,
+    margin: '3%',
   },
   connectButton: {
+    // backgroundColor:'orange',
+    position:'absolute',
+    marginTop:50,
     elevation: 3,
-    width: 150,
-    height: 150,
+    width: 200,
+    height: 200,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
