@@ -7,7 +7,7 @@ export const AppProvider = ({ children }) => {
     connection: false,
     bluetooth: false,
     ble: false,
-    location: true,
+    permission: false,
   });
 
   return <AppContext.Provider value={{ isConnected, setIsConnected }}>{children}</AppContext.Provider>;

@@ -37,7 +37,7 @@ export default function checkScreen() {
   };
 
   const connectDevice = () => {
-    if (isConnected.bluetooth && isConnected.ble && isConnected.location) {
+    if (isConnected.bluetooth && isConnected.ble && isConnected.permission) {
       if (Platform.OS === 'android') {
         ToastAndroid.show('Connecting...', 200);
       }
@@ -60,7 +60,9 @@ export default function checkScreen() {
           .catch(error => {
             // Failure code
             console.log(error);
-            Alert.alert("Couldn't Connect", `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
+            Alert.alert("Couldn't Connect", `${error}`, [
+              { text: 'OK', onPress: () => console.log('alert closed') },
+            ]);
           });
       }, 2000);
     } else if (!isConnected.bluetooth) {
@@ -93,7 +95,17 @@ export default function checkScreen() {
   useEffect(() => {
     if (Platform.OS === 'android') {
       //request required permissions
-      // PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT)
+      PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT).then(res => {
+        if (res) {
+          setIsConnected(prev => {
+            return {
+              ...prev,
+              permission: true,
+            };
+          });
+        }
+        return BleManager.enableBluetooth();
+      })
       //   .then(res => {
       //     PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(result => {
       //       if (result) {
@@ -128,8 +140,7 @@ export default function checkScreen() {
       //     });
       //   }) //turn on bluetooth if it is off
       //   .then(res => {
-          // return 
-          BleManager.enableBluetooth()
+      // return
         // })
         .then(() => {
           console.log('Bluetooth is turned on!');
@@ -200,7 +211,10 @@ export default function checkScreen() {
   }, [isConnected['bluetooth']]);
 
   return (
-    <ImageBackground style={styles.mainBody} source={require('../assets/gradient.png')} resizeMode="cover">
+    <ImageBackground
+      style={styles.mainBody}
+      source={require('../assets/gradient.png')}
+      resizeMode="cover">
       <StatusBar hidden={true} backgroundColor={styles.titleContainer.backgroundColor} />
       {/* <LinearGradient
         style={styles.titleContainer}
@@ -211,9 +225,35 @@ export default function checkScreen() {
         {/* <Text style={styles.titleText}>Jewellery Automation</Text> */}
       {/*</LinearGradient> */}
       <View style={styles.imageContainer}>
-      <Image source={require('../assets/logo2.png')} style={styles.logo} />
+        <Image source={require('../assets/logo2.png')} style={styles.logo} />
       </View>
       <View style={styles.bodyContainer}>
+        {isConnected['permission'] ? (
+          <View style={[styles.connectionbar, { backgroundColor: '#fff' }]}>
+            <Text
+              style={{
+                fontSize: 18,
+                color: '#111',
+                fontFamily: 'Roboto-Regular',
+              }}>
+              bluetooth Access
+            </Text>
+            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#73be73" />
+          </View>
+        ) : (
+          <View style={[styles.connectionbar, { backgroundColor: '#e7eef8' }]}>
+            <Text
+              style={{
+                fontSize: 18,
+                color: '#ccc',
+                fontFamily: 'Roboto-Regular',
+              }}>
+              Bluetooth Access
+            </Text>
+            <ActivityIndicator color="green" size="large" />
+          </View>
+        )}
+
         {isConnected['bluetooth'] ? (
           <View style={[styles.connectionbar, { backgroundColor: '#fff' }]}>
             <Text
@@ -222,7 +262,7 @@ export default function checkScreen() {
                 color: '#111',
                 fontFamily: 'Roboto-Regular',
               }}>
-              Turning bluetooth
+              Turning Bluetooth
             </Text>
             <FontAwesomeIcon icon={faCircleCheck} size={30} color="#73be73" />
           </View>
@@ -234,77 +274,56 @@ export default function checkScreen() {
                 color: '#ccc',
                 fontFamily: 'Roboto-Regular',
               }}>
-              Bluetooth Status
-            </Text>
-            <ActivityIndicator color="green" size="large" />
-          </View>
-        )}
-
-        {isConnected['location'] ? (
-          <View style={[styles.connectionbar, { backgroundColor: '#fff' }]}>
-            <Text
-              style={{
-                fontSize: 18,
-                color: '#111',
-                fontFamily: 'Roboto-Regular',
-              }}>
-              Location Access
-            </Text>
-            <FontAwesomeIcon icon={faCircleCheck} size={30} color="#73be73" />
-          </View>
-        ) : (
-          <View style={[styles.connectionbar, { backgroundColor: '#e7eef8' }]}>
-            <Text
-              style={{
-                fontSize: 18,
-                color: '#ccc',
-                fontFamily: 'Roboto-Regular',
-              }}>
-              Location Access
+              Turning Bluetooth
             </Text>
             <ActivityIndicator color="green" size="large" />
           </View>
         )}
         <View style={styles.wholeAnimation}>
-        <Lottie source={require('../assets/animations/orangeanimation.json')} loop ref={animationRef} style={{position:'absolute', marginTop:30}}  /> 
-        <View style={{justifyContent:'center', alignItems:'center', marginTop:100}}>
-        <TouchableOpacity
-            style={styles.connectButton}
-            activeOpacity={0.6}
-            underlayColor="#FDFCEE"
-            onPress={() => {
-              connectDevice();
-            }}>
-            <LinearGradient
-              colors={['#f0b52b', '#e67446']}
-              locations={[0, 0.7]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={
-                isConnected.bluetooth && isConnected.ble && isConnected.location
-                  ? [
-                      styles.connectButton,
-                      {
-                        backgroundColor: '#fff',
-                      },
-                    ]
-                  : [styles.connectButton, { backgroundColor: '#fff' }]
-              }>
-              <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Roboto-Regular',
-                  fontSize: 23,
-                  paddingBottom:'45%'
-                }}>
-                Connect
-              </Text>
-            {/* </LinearGradient> */}
-          </LinearGradient>
-          </TouchableOpacity>
+          <Lottie
+            source={require('../assets/animations/orangeanimation.json')}
+            loop
+            ref={animationRef}
+            style={{ position: 'absolute', marginTop: 30 }}
+          />
+          <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 100 }}>
+            <TouchableOpacity
+              style={styles.connectButton}
+              activeOpacity={0.6}
+              underlayColor="#FDFCEE"
+              onPress={() => {
+                connectDevice();
+              }}>
+              <LinearGradient
+                colors={['#f0b52b', '#e67446']}
+                locations={[0, 0.7]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={
+                  isConnected.bluetooth && isConnected.ble && isConnected.permission
+                    ? [
+                        styles.connectButton,
+                        {
+                          backgroundColor: '#fff',
+                        },
+                      ]
+                    : [styles.connectButton, { backgroundColor: '#fff' }]
+                }>
+                <Text
+                  style={{
+                    color: '#fff',
+                    fontFamily: 'Roboto-Regular',
+                    fontSize: 23,
+                    paddingBottom: '45%',
+                  }}>
+                  Connect
+                </Text>
+                {/* </LinearGradient> */}
+              </LinearGradient>
+            </TouchableOpacity>
           </View>
         </View>
-        </View>
+      </View>
     </ImageBackground>
   );
 }
@@ -324,11 +343,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  imageContainer:{
-    justifyContent:'center',
+  imageContainer: {
+    justifyContent: 'center',
     alignItems: 'center',
-    height:'40%',
-  },  
+    height: '40%',
+  },
   logo: {
     resizeMode: 'contain',
     width: '70%',
@@ -342,12 +361,12 @@ const styles = StyleSheet.create({
   },
   bodyContainer: {
     flex: 1,
-    paddingTop:50,
-    backgroundColor:'#fff',
-    justifyContent:'flex-start',
+    paddingTop: 50,
+    backgroundColor: '#fff',
+    justifyContent: 'flex-start',
     alignItems: 'center',
-    borderTopRightRadius:35,
-    borderTopLeftRadius:35,
+    borderTopRightRadius: 35,
+    borderTopLeftRadius: 35,
   },
   animation: {
     // marginBottom: '5%',
@@ -357,13 +376,13 @@ const styles = StyleSheet.create({
     width: 'auto',
   },
   wholeAnimation: {
-    position:'relative',
-    height:'100%',
-    width:'100%',
+    position: 'relative',
+    height: '100%',
+    width: '100%',
     // marginTop:150,
-    paddingBottom:50,
-    justifyContent:'center',
-    alignContent:'center'
+    paddingBottom: 50,
+    justifyContent: 'center',
+    alignContent: 'center',
   },
   connectionbar: {
     elevation: 5,
@@ -379,8 +398,8 @@ const styles = StyleSheet.create({
   },
   connectButton: {
     // backgroundColor:'orange',
-    position:'absolute',
-    marginTop:'6%',
+    position: 'absolute',
+    marginTop: '6%',
     elevation: 3,
     width: 200,
     height: 200,
