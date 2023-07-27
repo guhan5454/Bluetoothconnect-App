@@ -10,7 +10,13 @@ import {
   TouchableOpacity,
   StatusBar,
 } from 'react-native';
-import { faCircleStop, faCircleLeft, faCircleRight, faCircleUp, faCircleDown } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCircleStop,
+  faCircleLeft,
+  faCircleRight,
+  faCircleUp,
+  faCircleDown,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { AppContext } from '../Context/Context';
 import BleManager from 'react-native-ble-manager';
@@ -77,7 +83,9 @@ const ConnectedScreen = () => {
       .catch(error => {
         // Failure code
         console.log(error);
-        Alert.alert("Couldn't Disconnect", `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
+        Alert.alert("Couldn't Disconnect", `${error}`, [
+          { text: 'OK', onPress: () => console.log('alert closed') },
+        ]);
       });
   };
 
@@ -118,147 +126,188 @@ const ConnectedScreen = () => {
         })
         .catch(error => {
           console.log('Write error:', error);
-          Alert.alert('Message Not Sent', `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
+          Alert.alert('Message Not Sent', `${error}`, [
+            { text: 'OK', onPress: () => console.log('alert closed') },
+          ]);
         });
     }
   };
 
   return (
-    <ImageBackground style={styles.mainBody} source={require('../assets/bg5.jpg')} resizeMode="cover">
-    {/* <View style={styles.mainBody}> */}
-        <StatusBar hidden={true} backgroundColor={styles.titleContainer.backgroundColor} />
+    <View style={styles.mainBody}>
+      {/* <View style={styles.mainBody}> */}
+      <StatusBar hidden={true} backgroundColor={styles.titleContainer.backgroundColor} />
+      <LinearGradient
+        style={styles.titleContainer}
+        colors={['#f0b52b', '#e67446']}
+        locations={[0, 0.7]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}>
+        {/* <Text style={styles.titleText}>Jewellery Automation</Text> */}
+        <Image source={require('../assets/logo2.png')} style={styles.logo} />
+        {/* <Text style={styles.titleText}>Jewellery Automation</Text> */}
+      </LinearGradient>
+      <View style={styles.bodyContainer}>
+        <View style={styles.heading}>
+          <Text style={styles.switchTxt}>Temple Switch</Text>
+        </View>
         <LinearGradient
-          style={styles.titleContainer}
-          colors={['#e4abce', '#bd7580']}
+          style={styles.actionCard}
+          colors={['#e67446', '#f0b52b']}
           locations={[0, 0.7]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}>
-          {/* <Text style={styles.titleText}>Jewellery Automation</Text> */}
-          <Image source={require('../assets/logo.png')} style={styles.logo} />
-          {/* <Text style={styles.titleText}>Jewellery Automation</Text> */}
+          {/* <Text style={styles.switchTxt}>Temple Switch</Text> */}
+          <View style={styles.buttonPack}>
+            <TouchableOpacity
+              onPress={() => sendDataToESP32('U', 'tempup')}
+              style={[styles.button, { opacity: buttonState['tempup'] }]}>
+              <FontAwesomeIcon
+                icon={faCircleUp}
+                size={42}
+                color="#bd7580"
+                style={{ opacity: buttonState.tempup }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => sendDataToESP32('S', 'tempstop')}
+              style={[styles.button, { opacity: buttonState['tempstop'] }]}>
+              <FontAwesomeIcon
+                icon={faCircleStop}
+                size={42}
+                color="#bd7580"
+                style={{ opacity: buttonState.tempstop }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => sendDataToESP32('D', 'tempdown')}
+              style={[styles.button, { opacity: buttonState['tempdown'] }]}>
+              <FontAwesomeIcon
+                icon={faCircleDown}
+                size={42}
+                color="#bd7580"
+                style={{ opacity: buttonState.tempdown }}
+              />
+            </TouchableOpacity>
+          </View>
         </LinearGradient>
-        <View style={styles.bodyContainer}>
-          <View style={styles.actionCard}>
-            <Text style={styles.switchTxt}>Temple Switch</Text>
-            <View style={styles.buttonPack}>
-              <TouchableOpacity
-                onPress={() => sendDataToESP32('U', 'tempup')}
-                style={[styles.button, { opacity: buttonState['tempup'] }]}>
-                <FontAwesomeIcon icon={faCircleUp} size={42} color="#bd7580" style={{ opacity: buttonState.tempup }} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => sendDataToESP32('S', 'tempstop')}
-                style={[styles.button, { opacity: buttonState['tempstop'] }]}>
-                <FontAwesomeIcon
-                  icon={faCircleStop}
-                  size={42}
-                  color="#bd7580"
-                  style={{ opacity: buttonState.tempstop }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => sendDataToESP32('D', 'tempdown')}
-                style={[styles.button, { opacity: buttonState['tempdown'] }]}>
-                <FontAwesomeIcon
-                  icon={faCircleDown}
-                  size={42}
-                  color="#bd7580"
-                  style={{ opacity: buttonState.tempdown }}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={styles.actionCard}>
-            <Text style={styles.switchTxt}>Arch Switch</Text>
-            <View style={styles.buttonPack}>
-              <TouchableOpacity
-                onPress={() => sendDataToESP32('T', 'archtop')}
-                style={[styles.button, { opacity: buttonState['archtop'] }]}>
-                <FontAwesomeIcon icon={faCircleUp} size={42} color="#bd7580" style={{ opacity: buttonState.archtop }} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => sendDataToESP32('A', 'archstop')}
-                style={[styles.button, { opacity: buttonState['archstop'] }]}>
-                <FontAwesomeIcon
-                  icon={faCircleStop}
-                  size={42}
-                  color="#bd7580"
-                  style={{ opacity: buttonState.archstop }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => sendDataToESP32('B', 'archbottom')}
-                style={[styles.button, { opacity: buttonState['archbottom'] }]}>
-                <FontAwesomeIcon
-                  icon={faCircleDown}
-                  size={42}
-                  color="#bd7580"
-                  style={{ opacity: buttonState.archbottom }}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={styles.actionCard}>
-            <Text style={styles.switchTxt}>Lotus Switch</Text>
-            <View style={styles.buttonPack}>
-              <TouchableOpacity
-                onPress={() => sendDataToESP32('O', 'lotusopen')}
-                style={[styles.button, { opacity: buttonState['lotusopen'] }]}>
-                <FontAwesomeIcon
-                  icon={faCircleUp}
-                  size={42}
-                  color="#bd7580"
-                  style={{ opacity: buttonState.lotusopen }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => sendDataToESP32('L', 'lotusstop')}
-                style={[styles.button, { opacity: buttonState['lotusstop'] }]}>
-                <FontAwesomeIcon
-                  icon={faCircleStop}
-                  size={42}
-                  color="#bd7580"
-                  style={{ opacity: buttonState.lotusstop }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => sendDataToESP32('C', 'lotusclose')}
-                style={[styles.button, { opacity: buttonState['lotusclose'] }]}>
-                <FontAwesomeIcon
-                  icon={faCircleDown}
-                  size={42}
-                  color="#bd7580"
-                  style={{ opacity: buttonState.lotusclose }}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={styles.allContainer}>
+        <View style={styles.heading}>
+          <Text style={styles.switchTxt}>Arch Switch</Text>
+        </View>
+        <LinearGradient
+          style={styles.actionCard}
+          colors={['#f0b52b', '#e67446']}
+          locations={[0, 0.7]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}>
+          <View style={styles.buttonPack}>
             <TouchableOpacity
-              onPress={() => {
-                sendDataToESP32('F');
-              }}
-              style={[styles.allConnectCard, {backgroundColor: '#cf93a5', }]}>
-              <Text style={[styles.switchTxt, {color:'#fff', fontWeight:'800'}]}>All Off</Text>
+              onPress={() => sendDataToESP32('T', 'archtop')}
+              style={[styles.button, { opacity: buttonState['archtop'] }]}>
+              <FontAwesomeIcon
+                icon={faCircleUp}
+                size={42}
+                color="#bd7580"
+                style={{ opacity: buttonState.archtop }}
+              />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => {
-                sendDataToESP32('G');
-              }}
-              style={[styles.allConnectCard, { backgroundColor: '#73be73', }]}>
-              <Text style={[styles.switchTxt, {color:'#fff', fontWeight:'800'}]}>All On</Text>
+              onPress={() => sendDataToESP32('A', 'archstop')}
+              style={[styles.button, { opacity: buttonState['archstop'] }]}>
+              <FontAwesomeIcon
+                icon={faCircleStop}
+                size={42}
+                color="#bd7580"
+                style={{ opacity: buttonState.archstop }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => sendDataToESP32('B', 'archbottom')}
+              style={[styles.button, { opacity: buttonState['archbottom'] }]}>
+              <FontAwesomeIcon
+                icon={faCircleDown}
+                size={42}
+                color="#bd7580"
+                style={{ opacity: buttonState.archbottom }}
+              />
             </TouchableOpacity>
           </View>
+        </LinearGradient>
+        <View style={styles.heading}>
+          <Text style={styles.switchTxt}>Lotus Switch</Text>
+        </View>
+        <LinearGradient
+          style={styles.actionCard}
+          colors={['#e67446', '#f0b52b']}
+          locations={[0, 0.7]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}>
+          {/* <Text style={styles.switchTxt}>Lotus Switch</Text> */}
+          <View style={styles.buttonPack}>
+            <TouchableOpacity
+              onPress={() => sendDataToESP32('O', 'lotusopen')}
+              style={[styles.button, { opacity: buttonState['lotusopen'] }]}>
+              <FontAwesomeIcon
+                icon={faCircleUp}
+                size={42}
+                color="#bd7580"
+                style={{ opacity: buttonState.lotusopen }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => sendDataToESP32('L', 'lotusstop')}
+              style={[styles.button, { opacity: buttonState['lotusstop'] }]}>
+              <FontAwesomeIcon
+                icon={faCircleStop}
+                size={42}
+                color="#bd7580"
+                style={{ opacity: buttonState.lotusstop }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => sendDataToESP32('C', 'lotusclose')}
+              style={[styles.button, { opacity: buttonState['lotusclose'] }]}>
+              <FontAwesomeIcon
+                icon={faCircleDown}
+                size={42}
+                color="#bd7580"
+                style={{ opacity: buttonState.lotusclose }}
+              />
+            </TouchableOpacity>
+          </View>
+        </LinearGradient>
+        <View style={styles.allContainer}>
           <TouchableOpacity
-          style={styles.disconnectCard}
             onPress={() => {
-              disconnectDevice();
+              sendDataToESP32('F');
             }}
-            >
-            <Text style={[styles.switchTxt, {color:'#fff',fontWeight:'800'}]}>Disconnect</Text>
+            style={[styles.allConnectCard, { backgroundColor: '#cf93a5' }]}>
+            <Text style={[styles.switchTxt, { color: '#fff', fontWeight: '800' }]}>All Off</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              sendDataToESP32('G');
+            }}
+            style={[styles.allConnectCard, { backgroundColor: '#73be73' }]}>
+            <Text style={[styles.switchTxt, { color: '#fff', fontWeight: '800' }]}>All On</Text>
           </TouchableOpacity>
         </View>
-    </ImageBackground>
+        <TouchableOpacity
+          style={styles.disconnectCard}
+          onPress={() => {
+            disconnectDevice();
+          }}>
+          <LinearGradient
+            style={styles.gradientContainer}
+            colors={['#f0b52b', '#e67446']}
+            locations={[0, 0.7]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}>
+            <Text style={[styles.switchTxt, { color: '#fff', fontWeight: '800' }]}>Disconnect</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
+    </View>
     // </View>
   );
 };
@@ -267,14 +316,14 @@ const styles = StyleSheet.create({
   mainBody: {
     flex: 1,
     height: '100%',
-    backgroundColor:'#fff'
+    backgroundColor: '#fff',
   },
   titleContainer: {
     elevation: 20,
     width: '100%',
     borderBottomRightRadius: 30,
     borderBottomLeftRadius: 30,
-    height: '13%',
+    height: '15%',
     backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
@@ -285,34 +334,40 @@ const styles = StyleSheet.create({
     color: '#fff',
     marginBottom: '2%',
   },
-  logo:{
-    resizeMode:'contain',
-    width:'70%',
-    height:'100%',
+  logo: {
+    resizeMode: 'contain',
+    width: '70%',
+    height: '70%',
   },
   bodyContainer: {
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
+  heading: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    // marginTop:'2%',
+    width: '100%',
+  },
   actionCard: {
-    opacity: 0.7,
-    marginTop: '5%',
+    opacity: 0.4,
+    // marginTop: '5%',
     alignItems: 'center',
     justifyContent: 'space-evenly',
     paddingHorizontal: '4%',
     backgroundColor: '#fff',
     width: '93%',
-    height: '20%',
+    height: '13%',
     paddingVertical: '5%',
     borderRadius: 25,
     elevation: 3,
   },
   switchTxt: {
-    color: '#282828',
+    color: '#111',
     fontSize: 20,
     fontFamily: 'Roboto-Regular',
-    marginBottom: '6%',
+    marginVertical: '4%',
   },
   buttonPack: {
     flexDirection: 'row',
@@ -325,25 +380,33 @@ const styles = StyleSheet.create({
   disconnectCard: {
     opacity: 0.9,
     elevation: 4,
-    backgroundColor: '#bd7580',
-    borderWidth:1.5,
-    borderColor:'#fff',
+    // backgroundColor: '#bd7580',
+    // borderWidth: 1.5,
+    // borderColor: '#fff',
     height: '10%',
     marginTop: '3%',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 20,
+    // paddingHorizontal: '33%',
+  },
+  gradientContainer: {
+    flex: 1,
+    width: '100%',
     paddingHorizontal: '33%',
+    borderRadius: 25,
+    alignContent: 'center',
+    justifyContent: 'center',
   },
   allConnectCard: {
-    opacity:0.9,
+    opacity: 0.9,
     elevation: 2,
     marginHorizontal: '2%',
     justifyContent: 'center',
     borderRadius: 20,
-    height:'83%',
+    height: '83%',
     paddingHorizontal: '14.5%',
-    marginTop:'3%',
+    marginTop: '3%',
   },
   image: {
     flex: 1,
@@ -355,7 +418,7 @@ const styles = StyleSheet.create({
     // backgroundColor:'grey',
     marginTop: '5%',
     height: '13%',
-    paddingBottom:'2%'
+    paddingBottom: '2%',
   },
 });
 

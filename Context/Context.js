@@ -4,7 +4,7 @@ export const AppContext = React.createContext({});
 
 export const AppProvider = ({ children }) => {
   const [isConnected, setIsConnected] = useState({
-    connection: false,
+    connection: true,
     bluetooth: false,
     ble: false,
     location: false,
