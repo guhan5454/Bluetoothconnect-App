@@ -62,7 +62,7 @@ export default function checkScreen() {
             console.log(error);
             Alert.alert("Couldn't Connect", `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
           });
-      }, 5000);
+      }, 2000);
     } else if (!isConnected.bluetooth) {
       Alert.alert('Bluetooth turned off', 'Turn on bluetooth and try again', [
         {
@@ -291,9 +291,10 @@ export default function checkScreen() {
               }>
               <Text
                 style={{
-                  color: 'black',
+                  color: '#fff',
                   fontFamily: 'Roboto-Regular',
-                  fontSize: 20,
+                  fontSize: 23,
+                  paddingBottom:'45%'
                 }}>
                 Connect
               </Text>
@@ -325,7 +326,7 @@ const styles = StyleSheet.create({
   imageContainer:{
     justifyContent:'center',
     alignItems: 'center',
-    height:'30%',
+    height:'40%',
   },  
   logo: {
     resizeMode: 'contain',
@@ -351,8 +352,8 @@ const styles = StyleSheet.create({
     // marginBottom: '5%',
     alignItems: 'center',
     // justifyContent: 'center',
-    height: 300,
-    width: 100,
+    height: '90%',
+    width: 'auto',
   },
   wholeAnimation: {
     position:'relative',
@@ -372,19 +373,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     borderRadius: 20,
-    marginVertical: 19,
+    marginVertical: '5%',
     margin: '3%',
   },
   connectButton: {
     // backgroundColor:'orange',
     position:'absolute',
-    marginTop:50,
+    marginTop:'6%',
     elevation: 3,
     width: 200,
     height: 200,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 10,
+    padding: '2%',
     borderRadius: 100,
     opacity: 0.95,
   },

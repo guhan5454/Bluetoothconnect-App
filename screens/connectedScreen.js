@@ -9,6 +9,7 @@ import {
   Alert,
   TouchableOpacity,
   StatusBar,
+  Platform,
 } from 'react-native';
 import {
   faCircleStop,
@@ -72,7 +73,9 @@ const ConnectedScreen = () => {
       .then(() => {
         // Success code
         console.log('Disconnected');
-        ToastAndroid.show('Disconnected', 1000);
+        if(Platform.OS === 'android'){
+          ToastAndroid.show('Disconnected', 1000);
+        }
         setIsConnected(prev => {
           return {
             ...prev,
@@ -104,7 +107,9 @@ const ConnectedScreen = () => {
       allon: 0.8,
     };
     if (buttonState[key] === 1) {
+      if(Platform.OS === 'android'){
       ToastAndroid.show('Button already pressed', 3000);
+      }
     } else {
       updatedState[key] = 1;
 
@@ -122,7 +127,9 @@ const ConnectedScreen = () => {
       )
         .then(() => {
           console.log('Write: ' + data);
-          ToastAndroid.show('Message sent', 3000);
+          if(Platform.OS === 'android'){
+            ToastAndroid.show('Message sent', 3000);
+          }
         })
         .catch(error => {
           console.log('Write error:', error);
@@ -323,7 +330,7 @@ const styles = StyleSheet.create({
     width: '100%',
     borderBottomRightRadius: 30,
     borderBottomLeftRadius: 30,
-    height: '15%',
+    height: '17%',
     backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
@@ -351,13 +358,13 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   actionCard: {
-    opacity: 0.4,
+    opacity: 0.7,
     // marginTop: '5%',
     alignItems: 'center',
     justifyContent: 'space-evenly',
     paddingHorizontal: '4%',
     backgroundColor: '#fff',
-    width: '93%',
+    width: '92%',
     height: '13%',
     paddingVertical: '5%',
     borderRadius: 25,
@@ -372,10 +379,10 @@ const styles = StyleSheet.create({
   buttonPack: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    paddingHorizontal: '25%',
+    paddingHorizontal: '23%',
   },
   button: {
-    marginHorizontal: '45%',
+    marginHorizontal: '49%',
   },
   disconnectCard: {
     opacity: 0.9,
@@ -388,6 +395,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 20,
+    marginHorizontal:'2%',
     // paddingHorizontal: '33%',
   },
   gradientContainer: {
@@ -395,6 +403,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: '33%',
     borderRadius: 25,
+    opacity: 0.9,
     alignContent: 'center',
     justifyContent: 'center',
   },
@@ -405,7 +414,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 20,
     height: '83%',
-    paddingHorizontal: '14.5%',
+    paddingHorizontal: '14%',
     marginTop: '3%',
   },
   image: {
