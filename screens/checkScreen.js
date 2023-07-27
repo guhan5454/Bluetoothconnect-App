@@ -93,43 +93,44 @@ export default function checkScreen() {
   useEffect(() => {
     if (Platform.OS === 'android') {
       //request required permissions
-      PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT)
-        .then(res => {
-          PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(result => {
-            if (result) {
-              console.log('Permission is OK');
-              setIsConnected(prev => {
-                return {
-                  ...prev,
-                  location: true,
-                };
-              });
-            } else {
-              PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(result => {
-                if (result) {
-                  console.log('User accept');
-                  setIsConnected(prev => {
-                    return {
-                      ...prev,
-                      location: true,
-                    };
-                  });
-                } else {
-                  console.log('User refuse');
-                  Alert.alert('Permission Needed', 'App requires Location Permission', [
-                    {
-                      text: 'OK',
-                      onPress: () => console.log('alert closed'),
-                    },
-                  ]);
-                }
-              });
-            }
-          });
-        }) //turn on bluetooth if it is off
-        .then(res => {
-          return BleManager.enableBluetooth();
-        })
+      // PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT)
+      //   .then(res => {
+      //     PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(result => {
+      //       if (result) {
+      //         console.log('Permission is OK');
+      //         setIsConnected(prev => {
+      //           return {
+      //             ...prev,
+      //             location: true,
+      //           };
+      //         });
+      //       } else {
+      //         PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(result => {
+      //           if (result) {
+      //             console.log('User accept');
+      //             setIsConnected(prev => {
+      //               return {
+      //                 ...prev,
+      //                 location: true,
+      //               };
+      //             });
+      //           } else {
+      //             console.log('User refuse');
+      //             Alert.alert('Permission Needed', 'App requires Location Permission', [
+      //               {
+      //                 text: 'OK',
+      //                 onPress: () => console.log('alert closed'),
+      //               },
+      //             ]);
+      //           }
+      //         });
+      //       }
+      //     });
+      //   }) //turn on bluetooth if it is off
+      //   .then(res => {
+          // return 
+          BleManager.enableBluetooth()
+        // })
         .then(() => {
           console.log('Bluetooth is turned on!');
           setIsConnected(prev => {
@@ -160,15 +161,15 @@ export default function checkScreen() {
       });
     });
 
-    let stopListener = BleManagerEmitter.addListener('BleManagerStopScan', () => {
-      setIsScanning(false);
-      console.log('Scan is stopped');
-      handleGetConnectedDevices();
-    });
+    // let stopListener = BleManagerEmitter.addListener('BleManagerStopScan', () => {
+    //   setIsScanning(false);
+    //   console.log('Scan is stopped');
+    //   handleGetConnectedDevices();
+    // });
 
-    return () => {
-      stopListener.remove();
-    };
+    // return () => {
+    //   stopListener.remove();
+    // };
   }, []);
 
   useEffect(() => {
