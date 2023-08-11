@@ -96,8 +96,8 @@ export default function checkScreen() {
               locations={[0, 0.7]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
-              style={styles.Button}>
-              <TouchableOpacity onPress={() => loginHandler()}>
+              style={styles.ButtonContainer}>
+              <TouchableOpacity style={styles.Button} onPress={() => loginHandler()}>
                 <Text style={styles.Txt}>Login</Text>
               </TouchableOpacity>
             </LinearGradient>
@@ -161,16 +161,21 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 15.5,
   },
-  Button: {
+  ButtonContainer: {
     opacity: 0.9,
     elevation: 2,
     backgroundColor: '#F8F9FF',
     borderRadius: 13,
     width: '90%',
     height: 55,
+    
+    marginTop: '30%',
+  },
+  Button: {
+    width:'100%',
+    height:'100%',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: '30%',
   },
   Txt: {
     fontSize: 17,
