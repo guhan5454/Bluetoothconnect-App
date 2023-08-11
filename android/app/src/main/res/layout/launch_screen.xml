@@ -7,20 +7,48 @@
 
 </LinearLayout> -->
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/splash_background_color"
+    android:background="#F5F5F5"
     android:gravity="center">
 
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="250dp"
         android:layout_height="150dp"
-        android:src="@drawable/launch_screen"
-        android:scaleType="centerCrop"
+        android:layout_centerInParent="true"
+        android:contentDescription="@string/splash_screen_description"
         android:adjustViewBounds="true"
-        android:layout_centerInParent="true" />
+        android:src="@drawable/launch_screen" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/made_with_love"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
+            android:textColor="@android:color/black" 
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/iqube"
+            android:textColor="#1D82B7"
+            android:textStyle="bold"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp" />
+
+    </LinearLayout>
+
 </RelativeLayout>
 
 

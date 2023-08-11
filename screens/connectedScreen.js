@@ -4,7 +4,6 @@ import {
   View,
   Image,
   StyleSheet,
-  ImageBackground,
   ToastAndroid,
   Alert,
   TouchableOpacity,
@@ -28,17 +27,17 @@ const ConnectedScreen = () => {
   const { isConnected, setIsConnected } = useContext(AppContext);
 
   const [buttonState, setButtonState] = useState({
-    tempup: 0.8,
-    tempdown: 0.8,
-    tempstop: 0.8,
-    archtop: 0.8,
-    archbottom: 0.8,
-    archstop: 0.8,
-    lotusopen: 0.8,
-    lotusclose: 0.8,
-    lotusstop: 0.8,
-    alloff: 0.8,
-    allon: 0.8,
+    tempup: 0.85,
+    tempdown: 0.85,
+    tempstop: 0.85,
+    archtop: 0.85,
+    archbottom: 0.85,
+    archstop: 0.85,
+    lotusopen: 0.85,
+    lotusclose: 0.85,
+    lotusstop: 0.85,
+    alloff: 0.85,
+    allon: 0.85,
   });
 
   //checks the state of bluetooth
@@ -73,7 +72,7 @@ const ConnectedScreen = () => {
       .then(() => {
         // Success code
         console.log('Disconnected');
-        if(Platform.OS === 'android'){
+        if (Platform.OS === 'android') {
           ToastAndroid.show('Disconnected', 1000);
         }
         setIsConnected(prev => {
@@ -94,27 +93,27 @@ const ConnectedScreen = () => {
 
   const sendDataToESP32 = (str, key) => {
     updatedState = {
-      tempup: 0.8,
-      tempdown: 0.8,
-      tempstop: 0.8,
-      archtop: 0.8,
-      archbottom: 0.8,
-      archstop: 0.8,
-      lotusopen: 0.8,
-      lotusclose: 0.8,
-      lotusstop: 0.8,
-      alloff: 0.8,
-      allon: 0.8,
+      tempup: 0.85,
+      tempdown: 0.85,
+      tempstop: 0.85,
+      archtop: 0.85,
+      archbottom: 0.85,
+      archstop: 0.85,
+      lotusopen: 0.85,
+      lotusclose: 0.85,
+      lotusstop: 0.85,
+      alloff: 0.85,
+      allon: 0.85,
     };
     if (buttonState[key] === 1) {
-      if(Platform.OS === 'android'){
-      ToastAndroid.show('Button already pressed', 3000);
+      if (Platform.OS === 'android') {
+        ToastAndroid.show('Button already pressed', 3000);
       }
     } else {
+
       updatedState[key] = 1;
-
       setButtonState(updatedState);
-
+      
       const str1 = str;
       const data = str1.charCodeAt(0); //converts to ASCII
       console.log(data);
@@ -127,7 +126,7 @@ const ConnectedScreen = () => {
       )
         .then(() => {
           console.log('Write: ' + data);
-          if(Platform.OS === 'android'){
+          if (Platform.OS === 'android') {
             ToastAndroid.show('Message sent', 3000);
           }
         })
@@ -142,29 +141,20 @@ const ConnectedScreen = () => {
 
   return (
     <View style={styles.mainBody}>
-      {/* <View style={styles.mainBody}> */}
       <StatusBar hidden={true} backgroundColor={styles.titleContainer.backgroundColor} />
       <LinearGradient
         style={styles.titleContainer}
         colors={['#f0b52b', '#e67446']}
-        locations={[0, 0.7]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}>
-        {/* <Text style={styles.titleText}>Jewellery Automation</Text> */}
-        <Image source={require('../assets/logo2.png')} style={styles.logo} />
-        {/* <Text style={styles.titleText}>Jewellery Automation</Text> */}
+        locations={[0, 1]}
+        start={{ x: 1, y: 0 }}
+        end={{ x: 0, y: 1 }}>
+        <Image source={require('../assets/logo.png')} style={styles.logo} />
       </LinearGradient>
       <View style={styles.bodyContainer}>
         <View style={styles.heading}>
           <Text style={styles.switchTxt}>Temple Switch</Text>
         </View>
-        <LinearGradient
-          style={styles.actionCard}
-          colors={['#e67446', '#f0b52b']}
-          locations={[0, 0.7]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}>
-          {/* <Text style={styles.switchTxt}>Temple Switch</Text> */}
+        <View style={[styles.actionCard, { backgroundColor: '#fff' }]}>
           <View style={styles.buttonPack}>
             <TouchableOpacity
               onPress={() => sendDataToESP32('U', 'tempup')}
@@ -172,7 +162,7 @@ const ConnectedScreen = () => {
               <FontAwesomeIcon
                 icon={faCircleUp}
                 size={42}
-                color="#bd7580"
+                color="#E8981A"
                 style={{ opacity: buttonState.tempup }}
               />
             </TouchableOpacity>
@@ -182,7 +172,7 @@ const ConnectedScreen = () => {
               <FontAwesomeIcon
                 icon={faCircleStop}
                 size={42}
-                color="#bd7580"
+                color="#E8981A"
                 style={{ opacity: buttonState.tempstop }}
               />
             </TouchableOpacity>
@@ -192,21 +182,16 @@ const ConnectedScreen = () => {
               <FontAwesomeIcon
                 icon={faCircleDown}
                 size={42}
-                color="#bd7580"
+                color="#E8981A"
                 style={{ opacity: buttonState.tempdown }}
               />
             </TouchableOpacity>
           </View>
-        </LinearGradient>
+        </View>
         <View style={styles.heading}>
           <Text style={styles.switchTxt}>Arch Switch</Text>
         </View>
-        <LinearGradient
-          style={styles.actionCard}
-          colors={['#f0b52b', '#e67446']}
-          locations={[0, 0.7]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}>
+        <View style={[styles.actionCard, { backgroundColor: '#fff' }]}>
           <View style={styles.buttonPack}>
             <TouchableOpacity
               onPress={() => sendDataToESP32('T', 'archtop')}
@@ -214,7 +199,7 @@ const ConnectedScreen = () => {
               <FontAwesomeIcon
                 icon={faCircleUp}
                 size={42}
-                color="#bd7580"
+                color="#E8981A"
                 style={{ opacity: buttonState.archtop }}
               />
             </TouchableOpacity>
@@ -224,7 +209,7 @@ const ConnectedScreen = () => {
               <FontAwesomeIcon
                 icon={faCircleStop}
                 size={42}
-                color="#bd7580"
+                color="#E8981A"
                 style={{ opacity: buttonState.archstop }}
               />
             </TouchableOpacity>
@@ -234,22 +219,16 @@ const ConnectedScreen = () => {
               <FontAwesomeIcon
                 icon={faCircleDown}
                 size={42}
-                color="#bd7580"
-                style={{ opacity: buttonState.archbottom }}
+                color="#E8981A"
+                style={{ opacity: buttonState.archbottom, borderWidth: 2, borderColor: '#000' }}
               />
             </TouchableOpacity>
           </View>
-        </LinearGradient>
+        </View>
         <View style={styles.heading}>
           <Text style={styles.switchTxt}>Lotus Switch</Text>
         </View>
-        <LinearGradient
-          style={styles.actionCard}
-          colors={['#e67446', '#f0b52b']}
-          locations={[0, 0.7]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}>
-          {/* <Text style={styles.switchTxt}>Lotus Switch</Text> */}
+        <View style={[styles.actionCard, { backgroundColor: '#fff' }]}>
           <View style={styles.buttonPack}>
             <TouchableOpacity
               onPress={() => sendDataToESP32('O', 'lotusopen')}
@@ -257,7 +236,7 @@ const ConnectedScreen = () => {
               <FontAwesomeIcon
                 icon={faCircleUp}
                 size={42}
-                color="#bd7580"
+                color="#E8981A"
                 style={{ opacity: buttonState.lotusopen }}
               />
             </TouchableOpacity>
@@ -267,7 +246,7 @@ const ConnectedScreen = () => {
               <FontAwesomeIcon
                 icon={faCircleStop}
                 size={42}
-                color="#bd7580"
+                color="#E8981A"
                 style={{ opacity: buttonState.lotusstop }}
               />
             </TouchableOpacity>
@@ -277,27 +256,41 @@ const ConnectedScreen = () => {
               <FontAwesomeIcon
                 icon={faCircleDown}
                 size={42}
-                color="#bd7580"
+                color="#E8981A"
                 style={{ opacity: buttonState.lotusclose }}
               />
             </TouchableOpacity>
           </View>
-        </LinearGradient>
+        </View>
         <View style={styles.allContainer}>
-          <TouchableOpacity
-            onPress={() => {
-              sendDataToESP32('F');
-            }}
-            style={[styles.allConnectCard, { backgroundColor: '#cf93a5' }]}>
-            <Text style={[styles.switchTxt, { color: '#fff', fontWeight: '800' }]}>All Off</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              sendDataToESP32('G');
-            }}
-            style={[styles.allConnectCard, { backgroundColor: '#73be73' }]}>
-            <Text style={[styles.switchTxt, { color: '#fff', fontWeight: '800' }]}>All On</Text>
-          </TouchableOpacity>
+          <LinearGradient
+            style={styles.allConnectCard}
+            colors={['#d3d3d3', '#bbb']}
+            locations={[0, 0.7]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}>
+            <TouchableOpacity
+              onPress={() => {
+                sendDataToESP32('F','alloff');
+              }}
+              style={[styles.allButton,{opacity: buttonState['alloff']}]}>
+              <Text style={[styles.switchTxt, { color: '#fff', fontWeight: '800' }]}>All Off</Text>
+            </TouchableOpacity>
+          </LinearGradient>
+          <LinearGradient
+            style={styles.allConnectCard}
+            colors={['#8FCD8F', '#73be73']}
+            locations={[0, 0.7]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}>
+            <TouchableOpacity
+              style={[styles.allButton,{opacity: buttonState['allon']}]}
+              onPress={() => {
+                sendDataToESP32('G','allon');
+              }}>
+              <Text style={[styles.switchTxt, { color: '#fff', fontWeight: '800' }]}>All On</Text>
+            </TouchableOpacity>
+          </LinearGradient>
         </View>
         <TouchableOpacity
           style={styles.disconnectCard}
@@ -315,7 +308,6 @@ const ConnectedScreen = () => {
         </TouchableOpacity>
       </View>
     </View>
-    // </View>
   );
 };
 
@@ -330,7 +322,7 @@ const styles = StyleSheet.create({
     width: '100%',
     borderBottomRightRadius: 30,
     borderBottomLeftRadius: 30,
-    height: '17%',
+    height: '18%',
     backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
@@ -350,16 +342,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
+    marginTop:'1%'
   },
   heading: {
     justifyContent: 'center',
     alignItems: 'center',
-    // marginTop:'2%',
     width: '100%',
   },
   actionCard: {
-    opacity: 0.7,
-    // marginTop: '5%',
+    opacity: 0.8,
+    elevation: 5,
     alignItems: 'center',
     justifyContent: 'space-evenly',
     paddingHorizontal: '4%',
@@ -387,16 +379,18 @@ const styles = StyleSheet.create({
   disconnectCard: {
     opacity: 0.9,
     elevation: 4,
-    // backgroundColor: '#bd7580',
-    // borderWidth: 1.5,
-    // borderColor: '#fff',
     height: '10%',
     marginTop: '3%',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 20,
-    marginHorizontal:'2%',
-    // paddingHorizontal: '33%',
+    marginHorizontal: '2%',
+  },
+  allButton:{
+    height:'100%',
+    alignItems:'center',
+    justifyContent: 'center',
+    paddingHorizontal:'14%'
   },
   gradientContainer: {
     flex: 1,
@@ -408,13 +402,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   allConnectCard: {
-    opacity: 0.9,
     elevation: 2,
     marginHorizontal: '2%',
-    justifyContent: 'center',
     borderRadius: 20,
     height: '83%',
-    paddingHorizontal: '14%',
     marginTop: '3%',
   },
   image: {
@@ -424,7 +415,6 @@ const styles = StyleSheet.create({
   },
   allContainer: {
     flexDirection: 'row',
-    // backgroundColor:'grey',
     marginTop: '5%',
     height: '13%',
     paddingBottom: '2%',

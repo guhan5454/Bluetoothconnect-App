@@ -3,7 +3,6 @@ import {
   View,
   Platform,
   StyleSheet,
-  ImageBackground,
   NativeModules,
   Alert,
   Image,
@@ -30,6 +29,7 @@ export default function checkScreen() {
   const { isConnected, setIsConnected } = useContext(AppContext);
   const animationRef = useRef(null);
 
+  //used for animation
   const playAnimation = () => {
     if (animationRef.current) {
       animationRef.current.play();
@@ -95,53 +95,18 @@ export default function checkScreen() {
   useEffect(() => {
     if (Platform.OS === 'android') {
       //request required permissions
-      PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT).then(res => {
-        if (res) {
-          setIsConnected(prev => {
-            return {
-              ...prev,
-              permission: true,
-            };
-          });
-        }
-        return BleManager.enableBluetooth();
-      })
-      //   .then(res => {
-      //     PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(result => {
-      //       if (result) {
-      //         console.log('Permission is OK');
-      //         setIsConnected(prev => {
-      //           return {
-      //             ...prev,
-      //             location: true,
-      //           };
-      //         });
-      //       } else {
-      //         PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION).then(result => {
-      //           if (result) {
-      //             console.log('User accept');
-      //             setIsConnected(prev => {
-      //               return {
-      //                 ...prev,
-      //                 location: true,
-      //               };
-      //             });
-      //           } else {
-      //             console.log('User refuse');
-      //             Alert.alert('Permission Needed', 'App requires Location Permission', [
-      //               {
-      //                 text: 'OK',
-      //                 onPress: () => console.log('alert closed'),
-      //               },
-      //             ]);
-      //           }
-      //         });
-      //       }
-      //     });
-      //   }) //turn on bluetooth if it is off
-      //   .then(res => {
-      // return
-        // })
+      PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT)
+        .then(res => {
+          if (res) {
+            setIsConnected(prev => {
+              return {
+                ...prev,
+                permission: true,
+              };
+            });
+          }
+          return BleManager.enableBluetooth();
+        })
         .then(() => {
           console.log('Bluetooth is turned on!');
           setIsConnected(prev => {
@@ -211,21 +176,15 @@ export default function checkScreen() {
   }, [isConnected['bluetooth']]);
 
   return (
-    <ImageBackground
-      style={styles.mainBody}
-      source={require('../assets/gradient.png')}
-      resizeMode="cover">
-      <StatusBar hidden={true} backgroundColor={styles.titleContainer.backgroundColor} />
-      {/* <LinearGradient
-        style={styles.titleContainer}
-        colors={['#D68E6A', '#CC5D45']}
-        locations={[0, 0.7]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}>
-        {/* <Text style={styles.titleText}>Jewellery Automation</Text> */}
-      {/*</LinearGradient> */}
+    <LinearGradient
+        colors={['#f0b52b', '#e67446']}
+        locations={[0, 0.9]}
+        start={{ x: 1, y: 0 }}
+        end={{ x: 0.5, y: 0.5 }}
+        style={styles.mainBody}>
+      <StatusBar hidden={true} />
       <View style={styles.imageContainer}>
-        <Image source={require('../assets/logo2.png')} style={styles.logo} />
+        <Image source={require('../assets/logo.png')} style={styles.logo} />
       </View>
       <View style={styles.bodyContainer}>
         {isConnected['permission'] ? (
@@ -279,6 +238,7 @@ export default function checkScreen() {
             <ActivityIndicator color="green" size="large" />
           </View>
         )}
+
         <View style={styles.wholeAnimation}>
           <Lottie
             source={require('../assets/animations/orangeanimation.json')}
@@ -318,13 +278,12 @@ export default function checkScreen() {
                   }}>
                   Connect
                 </Text>
-                {/* </LinearGradient> */}
               </LinearGradient>
             </TouchableOpacity>
           </View>
         </View>
       </View>
-    </ImageBackground>
+    </LinearGradient>
   );
 }
 
@@ -346,12 +305,12 @@ const styles = StyleSheet.create({
   imageContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: '40%',
+    height: '35%',
   },
   logo: {
     resizeMode: 'contain',
-    width: '70%',
-    height: '70%',
+    width: '90%',
+    height: '50%',
   },
   titleText: {
     fontFamily: 'Roboto-Medium',
@@ -369,9 +328,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 35,
   },
   animation: {
-    // marginBottom: '5%',
     alignItems: 'center',
-    // justifyContent: 'center',
     height: '90%',
     width: 'auto',
   },
@@ -379,7 +336,6 @@ const styles = StyleSheet.create({
     position: 'relative',
     height: '100%',
     width: '100%',
-    // marginTop:150,
     paddingBottom: 50,
     justifyContent: 'center',
     alignContent: 'center',
@@ -397,7 +353,6 @@ const styles = StyleSheet.create({
     margin: '3%',
   },
   connectButton: {
-    // backgroundColor:'orange',
     position: 'absolute',
     marginTop: '6%',
     elevation: 3,
