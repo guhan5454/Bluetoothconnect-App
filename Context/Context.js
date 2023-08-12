@@ -3,10 +3,10 @@ import React, { useContext, useState } from 'react';
 export const AppContext = React.createContext({});
 
 export const AppProvider = ({ children }) => {
-  const [ isLoggedIn, setIsLoggedIn ] = useState(false);
+  const [ isLoggedIn, setIsLoggedIn ] = useState(true);
 
   const [isConnected, setIsConnected] = useState({
-    connection: false,
+    connection: true,
     bluetooth: false,
     ble: false,
     permission: false,
