@@ -24,7 +24,7 @@ export default function checkScreen() {
   const passwordInputRef = useRef(null);
 
   function loginHandler() {
-    if (username == 'swarnamandhir' && password == 'admin') {
+    if (username.trim().toLowerCase() == 'swarnamandhir' && password == 'admin') {
       setIsLoggedIn(true);
     } else {
       Alert.alert('Invalid Login Credential', 'Try Again', [
