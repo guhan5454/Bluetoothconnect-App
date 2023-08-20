@@ -17,11 +17,11 @@ import {
   faCircleUp,
   faCircleDown,
 } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { AppContext } from '../Context/Context';
 import BleManager from 'react-native-ble-manager';
 import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 import LinearGradient from 'react-native-linear-gradient';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { AppContext } from '../Context/Context';
 
 const ConnectedScreen = () => {
   const { isConnected, setIsConnected } = useContext(AppContext);
@@ -110,10 +110,9 @@ const ConnectedScreen = () => {
         ToastAndroid.show('Button already pressed', 3000);
       }
     } else {
-
       updatedState[key] = 1;
       setButtonState(updatedState);
-      
+
       const str1 = str;
       const data = str1.charCodeAt(0); //converts to ASCII
       console.log(data);
@@ -141,7 +140,7 @@ const ConnectedScreen = () => {
 
   return (
     <View style={styles.mainBody}>
-      <StatusBar hidden={true} backgroundColor={styles.titleContainer.backgroundColor} />
+      <StatusBar hidden={true} />
       <LinearGradient
         style={styles.titleContainer}
         colors={['#f0b52b', '#e67446']}
@@ -271,9 +270,9 @@ const ConnectedScreen = () => {
             end={{ x: 1, y: 1 }}>
             <TouchableOpacity
               onPress={() => {
-                sendDataToESP32('F','alloff');
+                sendDataToESP32('F', 'alloff');
               }}
-              style={[styles.allButton,{opacity: buttonState['alloff']}]}>
+              style={[styles.allButton, { opacity: buttonState['alloff'] }]}>
               <Text style={[styles.switchTxt, { color: '#fff', fontWeight: '800' }]}>All Off</Text>
             </TouchableOpacity>
           </LinearGradient>
@@ -284,9 +283,9 @@ const ConnectedScreen = () => {
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}>
             <TouchableOpacity
-              style={[styles.allButton,{opacity: buttonState['allon']}]}
+              style={[styles.allButton, { opacity: buttonState['allon'] }]}
               onPress={() => {
-                sendDataToESP32('G','allon');
+                sendDataToESP32('G', 'allon');
               }}>
               <Text style={[styles.switchTxt, { color: '#fff', fontWeight: '800' }]}>All On</Text>
             </TouchableOpacity>
@@ -342,7 +341,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    marginTop:'1%'
+    marginTop: '1%',
   },
   heading: {
     justifyContent: 'center',
@@ -386,11 +385,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginHorizontal: '2%',
   },
-  allButton:{
-    height:'100%',
-    alignItems:'center',
+  allButton: {
+    height: '100%',
+    alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal:'14%'
+    paddingHorizontal: '14%',
   },
   gradientContainer: {
     flex: 1,

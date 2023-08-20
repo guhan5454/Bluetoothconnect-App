@@ -14,11 +14,11 @@ import {
   StatusBar,
 } from 'react-native';
 import React, { useEffect, useContext, useRef } from 'react';
-import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import Lottie from 'lottie-react-native';
 import BleManager from 'react-native-ble-manager';
 import BluetoothStateManager from 'react-native-bluetooth-state-manager';
+import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { AppContext } from '../Context/Context';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -60,6 +60,7 @@ export default function checkScreen() {
           .catch(error => {
             // Failure code
             console.log(error);
+            animationRef.current.reset();
             Alert.alert("Couldn't Connect", `${error}`, [
               { text: 'OK', onPress: () => console.log('alert closed') },
             ]);
@@ -161,6 +162,7 @@ export default function checkScreen() {
           });
           break;
         case 'PoweredOff':
+          animationRef.current.reset();
           setIsConnected(prev => {
             return {
               ...prev,
@@ -177,11 +179,11 @@ export default function checkScreen() {
 
   return (
     <LinearGradient
-        colors={['#f0b52b', '#e67446']}
-        locations={[0, 0.9]}
-        start={{ x: 1, y: 0 }}
-        end={{ x: 0.5, y: 0.5 }}
-        style={styles.mainBody}>
+      colors={['#f0b52b', '#e67446']}
+      locations={[0, 0.9]}
+      start={{ x: 1, y: 0 }}
+      end={{ x: 0.5, y: 0.5 }}
+      style={styles.mainBody}>
       <StatusBar hidden={true} />
       <View style={styles.imageContainer}>
         <Image source={require('../assets/logo.png')} style={styles.logo} />

@@ -11,10 +11,11 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import { AppContext } from '../Context/Context';
 import LinearGradient from 'react-native-linear-gradient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { faLock, faUnlock } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { AppContext } from '../Context/Context';
 
 export default function checkScreen() {
   const [username, setUsername] = useState('');
@@ -23,9 +24,22 @@ export default function checkScreen() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const passwordInputRef = useRef(null);
 
+  const storeData = async (username, password) => {
+    try {
+      const jsonValue = JSON.stringify({ id: username, pass: password });
+      await AsyncStorage.setItem('login-key', jsonValue);
+      console.log('done');
+    } catch (e) {
+      // saving error
+      console.log('saving error');
+    }
+  };
+
   function loginHandler() {
-    if (username.trim().toLowerCase() == 'swarnamandhir' && password == 'admin') {
+    if (username.trim() == 'swarnamandhir' && password == 'admin') {
+      storeData(username.trim(), password);
       setIsLoggedIn(true);
+      console.log('done saving');
     } else {
       Alert.alert('Invalid Login Credential', 'Try Again', [
         { text: 'OK', onPress: () => console.log('alert clossed') },
@@ -34,77 +48,81 @@ export default function checkScreen() {
   }
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        Keyboard.dismiss();
-      }}>
-      <LinearGradient
-        colors={['#f0b52b', '#e67446']}
-        locations={[0, 0.9]}
-        start={{ x: 1, y: 0 }}
-        end={{ x: 0.5, y: 0.5 }}
-        style={styles.Container}>
-        <StatusBar hidden={true} />
-        <View style={styles.TitleContainer}>
-          <Image source={require('../assets/logo.png')} style={styles.imageStyle} />
-        </View>
-        <View style={styles.BodyContainer}>
-          <Text style={styles.Heading}>Welcome</Text>
-          <View style={styles.InputContainer}>
-            <TextInput
-              placeholder="Username"
-              placeholderTextColor={'#434242'}
-              value={username}
-              onChangeText={val => {
-                setUsername(val);
-              }}
-              returnKeyType="next" // Set returnKeyType to "next"
-              onSubmitEditing={() => passwordInputRef.current.focus()} // Move focus to the password input
-              style={styles.TxtInput}
-            />
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-              <TextInput
-                ref={passwordInputRef} // Set the ref for password input
-                placeholder="Password"
-                placeholderTextColor={'#434242'}
-                secureTextEntry={!isPasswordVisible}
-                value={password}
-                onChangeText={val => {
-                  setPasssword(val);
-                }}
-                style={styles.TxtInput}
-                onSubmitEditing={() => loginHandler()}
-              />
-              <TouchableOpacity
-                onPress={() => setIsPasswordVisible(!isPasswordVisible)} // Toggle password visibility
-                style={{
-                  position: 'absolute',
-                  top: '40%',
-                  marginHorizontal: '3%',
-                }}>
-                <Text style={{ color: '#000' }}>
-                  {isPasswordVisible ? (
-                    <FontAwesomeIcon icon={faUnlock} size={20} color="#434242" />
-                  ) : (
-                    <FontAwesomeIcon icon={faLock} size={20} color="#434242" />
-                  )}
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <LinearGradient
-              colors={['#f0b52b', '#e67446']}
-              locations={[0, 0.7]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.ButtonContainer}>
-              <TouchableOpacity style={styles.Button} onPress={() => loginHandler()}>
-                <Text style={styles.Txt}>Login</Text>
-              </TouchableOpacity>
-            </LinearGradient>
+    <>
+      <StatusBar hidden={true} />
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+        }}>
+        <LinearGradient
+          colors={['#f0b52b', '#e67446']}
+          locations={[0, 0.9]}
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0.5, y: 0.5 }}
+          style={styles.Container}>
+          <View style={styles.TitleContainer}>
+            <Image source={require('../assets/logo.png')} style={styles.imageStyle} />
           </View>
-        </View>
-      </LinearGradient>
-    </TouchableWithoutFeedback>
+          <View style={styles.BodyContainer}>
+            <Text style={styles.Heading}>Welcome</Text>
+            <View style={styles.InputContainer}>
+              <TextInput
+                placeholder="Username"
+                placeholderTextColor={'#434242'}
+                value={username}
+                autoCapitalize="none"
+                onChangeText={val => {
+                  setUsername(val);
+                }}
+                returnKeyType="next" // Set returnKeyType to "next"
+                onSubmitEditing={() => passwordInputRef.current.focus()} // Move focus to the password input
+                style={styles.TxtInput}
+              />
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                <TextInput
+                  ref={passwordInputRef} // Set the ref for password input
+                  placeholder="Password"
+                  placeholderTextColor={'#434242'}
+                  secureTextEntry={!isPasswordVisible}
+                  value={password}
+                  autoCapitalize="none"
+                  onChangeText={val => {
+                    setPasssword(val);
+                  }}
+                  style={styles.TxtInput}
+                  onSubmitEditing={() => loginHandler()}
+                />
+                <TouchableOpacity
+                  onPress={() => setIsPasswordVisible(!isPasswordVisible)} // Toggle password visibility
+                  style={{
+                    position: 'absolute',
+                    top: '40%',
+                    marginHorizontal: '3%',
+                  }}>
+                  <Text style={{ color: '#000' }}>
+                    {isPasswordVisible ? (
+                      <FontAwesomeIcon icon={faUnlock} size={20} color="#434242" />
+                    ) : (
+                      <FontAwesomeIcon icon={faLock} size={20} color="#434242" />
+                    )}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <LinearGradient
+                colors={['#f0b52b', '#e67446']}
+                locations={[0, 0.7]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.ButtonContainer}>
+                <TouchableOpacity style={styles.Button} onPress={() => loginHandler()}>
+                  <Text style={styles.Txt}>Login</Text>
+                </TouchableOpacity>
+              </LinearGradient>
+            </View>
+          </View>
+        </LinearGradient>
+      </TouchableWithoutFeedback>
+    </>
   );
 }
 
@@ -168,12 +186,12 @@ const styles = StyleSheet.create({
     borderRadius: 13,
     width: '90%',
     height: 55,
-    
+
     marginTop: '30%',
   },
   Button: {
-    width:'100%',
-    height:'100%',
+    width: '100%',
+    height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
   },
