@@ -1,22 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import {
-  Text,
-  View,
-  Image,
-  StyleSheet,
-  ToastAndroid,
-  Alert,
-  TouchableOpacity,
-  StatusBar,
-  Platform,
-} from 'react-native';
-import {
-  faCircleStop,
-  faCircleLeft,
-  faCircleRight,
-  faCircleUp,
-  faCircleDown,
-} from '@fortawesome/free-solid-svg-icons';
+import { Text, View, Image, StyleSheet, ToastAndroid, Alert, TouchableOpacity, StatusBar, Platform } from 'react-native';
+import { faCircleStop, faCircleLeft, faCircleRight, faCircleUp, faCircleDown } from '@fortawesome/free-solid-svg-icons';
 import BleManager from 'react-native-ble-manager';
 import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 import LinearGradient from 'react-native-linear-gradient';
@@ -85,9 +69,7 @@ const ConnectedScreen = () => {
       .catch(error => {
         // Failure code
         console.log(error);
-        Alert.alert("Couldn't Disconnect", `${error}`, [
-          { text: 'OK', onPress: () => console.log('alert closed') },
-        ]);
+        Alert.alert("Couldn't Disconnect", `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
       });
   };
 
@@ -117,12 +99,7 @@ const ConnectedScreen = () => {
       const data = str1.charCodeAt(0); //converts to ASCII
       console.log(data);
 
-      BleManager.write(
-        '64:E8:33:DA:B9:26',
-        '2e83cb78-c55e-4172-a529-e9597e98aa53',
-        'f101a3de-99aa-4375-bc5d-8e58679e267c',
-        [data],
-      )
+      BleManager.write('64:E8:33:DA:B9:26', '2e83cb78-c55e-4172-a529-e9597e98aa53', 'f101a3de-99aa-4375-bc5d-8e58679e267c', [data])
         .then(() => {
           console.log('Write: ' + data);
           if (Platform.OS === 'android') {
@@ -131,21 +108,15 @@ const ConnectedScreen = () => {
         })
         .catch(error => {
           console.log('Write error:', error);
-          Alert.alert('Message Not Sent', `${error}`, [
-            { text: 'OK', onPress: () => console.log('alert closed') },
-          ]);
+          Alert.alert('Message Not Sent', `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
         });
     }
   };
 
   return (
     <View style={styles.mainBody}>
-      <LinearGradient
-        style={styles.titleContainer}
-        colors={['#f0b52b', '#e67446']}
-        locations={[0, 1]}
-        start={{ x: 1, y: 0 }}
-        end={{ x: 0, y: 1 }}>
+      <LinearGradient style={styles.titleContainer} colors={['#f0b52b', '#e67446']} locations={[0, 1]} start={{ x: 1, y: 0 }} end={{ x: 0, y: 1 }}>
+        <StatusBar translucent={true} backgroundColor={'transparent'} />
         <Image source={require('../assets/logo.png')} style={styles.logo} />
       </LinearGradient>
       <View style={styles.bodyContainer}>
@@ -154,35 +125,14 @@ const ConnectedScreen = () => {
         </View>
         <View style={[styles.actionCard, { backgroundColor: '#fff' }]}>
           <View style={styles.buttonPack}>
-            <TouchableOpacity
-              onPress={() => sendDataToESP32('U', 'tempup')}
-              style={[styles.button, { opacity: buttonState['tempup'] }]}>
-              <FontAwesomeIcon
-                icon={faCircleUp}
-                size={42}
-                color="#E8981A"
-                style={{ opacity: buttonState.tempup }}
-              />
+            <TouchableOpacity onPress={() => sendDataToESP32('U', 'tempup')} style={[styles.button, { opacity: buttonState['tempup'] }]}>
+              <FontAwesomeIcon icon={faCircleUp} size={42} color="#E8981A" style={{ opacity: buttonState.tempup }} />
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => sendDataToESP32('S', 'tempstop')}
-              style={[styles.button, { opacity: buttonState['tempstop'] }]}>
-              <FontAwesomeIcon
-                icon={faCircleStop}
-                size={42}
-                color="#E8981A"
-                style={{ opacity: buttonState.tempstop }}
-              />
+            <TouchableOpacity onPress={() => sendDataToESP32('S', 'tempstop')} style={[styles.button, { opacity: buttonState['tempstop'] }]}>
+              <FontAwesomeIcon icon={faCircleStop} size={42} color="#E8981A" style={{ opacity: buttonState.tempstop }} />
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => sendDataToESP32('D', 'tempdown')}
-              style={[styles.button, { opacity: buttonState['tempdown'] }]}>
-              <FontAwesomeIcon
-                icon={faCircleDown}
-                size={42}
-                color="#E8981A"
-                style={{ opacity: buttonState.tempdown }}
-              />
+            <TouchableOpacity onPress={() => sendDataToESP32('D', 'tempdown')} style={[styles.button, { opacity: buttonState['tempdown'] }]}>
+              <FontAwesomeIcon icon={faCircleDown} size={42} color="#E8981A" style={{ opacity: buttonState.tempdown }} />
             </TouchableOpacity>
           </View>
         </View>
@@ -191,29 +141,13 @@ const ConnectedScreen = () => {
         </View>
         <View style={[styles.actionCard, { backgroundColor: '#fff' }]}>
           <View style={styles.buttonPack}>
-            <TouchableOpacity
-              onPress={() => sendDataToESP32('T', 'archtop')}
-              style={[styles.button, { opacity: buttonState['archtop'] }]}>
-              <FontAwesomeIcon
-                icon={faCircleUp}
-                size={42}
-                color="#E8981A"
-                style={{ opacity: buttonState.archtop }}
-              />
+            <TouchableOpacity onPress={() => sendDataToESP32('T', 'archtop')} style={[styles.button, { opacity: buttonState['archtop'] }]}>
+              <FontAwesomeIcon icon={faCircleUp} size={42} color="#E8981A" style={{ opacity: buttonState.archtop }} />
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => sendDataToESP32('A', 'archstop')}
-              style={[styles.button, { opacity: buttonState['archstop'] }]}>
-              <FontAwesomeIcon
-                icon={faCircleStop}
-                size={42}
-                color="#E8981A"
-                style={{ opacity: buttonState.archstop }}
-              />
+            <TouchableOpacity onPress={() => sendDataToESP32('A', 'archstop')} style={[styles.button, { opacity: buttonState['archstop'] }]}>
+              <FontAwesomeIcon icon={faCircleStop} size={42} color="#E8981A" style={{ opacity: buttonState.archstop }} />
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => sendDataToESP32('B', 'archbottom')}
-              style={[styles.button, { opacity: buttonState['archbottom'] }]}>
+            <TouchableOpacity onPress={() => sendDataToESP32('B', 'archbottom')} style={[styles.button, { opacity: buttonState['archbottom'] }]}>
               <FontAwesomeIcon
                 icon={faCircleDown}
                 size={42}
@@ -228,45 +162,19 @@ const ConnectedScreen = () => {
         </View>
         <View style={[styles.actionCard, { backgroundColor: '#fff' }]}>
           <View style={styles.buttonPack}>
-            <TouchableOpacity
-              onPress={() => sendDataToESP32('O', 'lotusopen')}
-              style={[styles.button, { opacity: buttonState['lotusopen'] }]}>
-              <FontAwesomeIcon
-                icon={faCircleUp}
-                size={42}
-                color="#E8981A"
-                style={{ opacity: buttonState.lotusopen }}
-              />
+            <TouchableOpacity onPress={() => sendDataToESP32('O', 'lotusopen')} style={[styles.button, { opacity: buttonState['lotusopen'] }]}>
+              <FontAwesomeIcon icon={faCircleUp} size={42} color="#E8981A" style={{ opacity: buttonState.lotusopen }} />
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => sendDataToESP32('L', 'lotusstop')}
-              style={[styles.button, { opacity: buttonState['lotusstop'] }]}>
-              <FontAwesomeIcon
-                icon={faCircleStop}
-                size={42}
-                color="#E8981A"
-                style={{ opacity: buttonState.lotusstop }}
-              />
+            <TouchableOpacity onPress={() => sendDataToESP32('L', 'lotusstop')} style={[styles.button, { opacity: buttonState['lotusstop'] }]}>
+              <FontAwesomeIcon icon={faCircleStop} size={42} color="#E8981A" style={{ opacity: buttonState.lotusstop }} />
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => sendDataToESP32('C', 'lotusclose')}
-              style={[styles.button, { opacity: buttonState['lotusclose'] }]}>
-              <FontAwesomeIcon
-                icon={faCircleDown}
-                size={42}
-                color="#E8981A"
-                style={{ opacity: buttonState.lotusclose }}
-              />
+            <TouchableOpacity onPress={() => sendDataToESP32('C', 'lotusclose')} style={[styles.button, { opacity: buttonState['lotusclose'] }]}>
+              <FontAwesomeIcon icon={faCircleDown} size={42} color="#E8981A" style={{ opacity: buttonState.lotusclose }} />
             </TouchableOpacity>
           </View>
         </View>
         <View style={styles.allContainer}>
-          <LinearGradient
-            style={styles.allConnectCard}
-            colors={['#d3d3d3', '#bbb']}
-            locations={[0, 0.7]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}>
+          <LinearGradient style={styles.allConnectCard} colors={['#d3d3d3', '#bbb']} locations={[0, 0.7]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
             <TouchableOpacity
               onPress={() => {
                 sendDataToESP32('F', 'alloff');

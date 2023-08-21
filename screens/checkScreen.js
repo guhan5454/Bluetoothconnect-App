@@ -61,9 +61,7 @@ export default function checkScreen() {
             // Failure code
             console.log(error);
             animationRef.current.reset();
-            Alert.alert("Couldn't Connect", `${error}`, [
-              { text: 'OK', onPress: () => console.log('alert closed') },
-            ]);
+            Alert.alert("Couldn't Connect", `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
           });
       }, 2000);
     } else if (!isConnected.bluetooth) {
@@ -178,12 +176,8 @@ export default function checkScreen() {
   }, [isConnected['bluetooth']]);
 
   return (
-    <LinearGradient
-      colors={['#f0b52b', '#e67446']}
-      locations={[0, 0.9]}
-      start={{ x: 1, y: 0 }}
-      end={{ x: 0.5, y: 0.5 }}
-      style={styles.mainBody}>
+    <LinearGradient colors={['#f0b52b', '#e67446']} locations={[0, 0.9]} start={{ x: 1, y: 0 }} end={{ x: 0.5, y: 0.5 }} style={styles.mainBody}>
+      <StatusBar translucent={true} backgroundColor={'transparent'} />
       <View style={styles.imageContainer}>
         <Image source={require('../assets/logo.png')} style={styles.logo} />
       </View>
