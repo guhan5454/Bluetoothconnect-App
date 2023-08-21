@@ -140,7 +140,6 @@ const ConnectedScreen = () => {
 
   return (
     <View style={styles.mainBody}>
-      <StatusBar hidden={true} />
       <LinearGradient
         style={styles.titleContainer}
         colors={['#f0b52b', '#e67446']}

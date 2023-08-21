@@ -184,7 +184,6 @@ export default function checkScreen() {
       start={{ x: 1, y: 0 }}
       end={{ x: 0.5, y: 0.5 }}
       style={styles.mainBody}>
-      <StatusBar hidden={true} />
       <View style={styles.imageContainer}>
         <Image source={require('../assets/logo.png')} style={styles.logo} />
       </View>

@@ -49,7 +49,6 @@ export default function checkScreen() {
 
   return (
     <>
-      <StatusBar hidden={true} />
       <TouchableWithoutFeedback
         onPress={() => {
           Keyboard.dismiss();
