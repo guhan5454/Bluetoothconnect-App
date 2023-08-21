@@ -197,7 +197,7 @@ export default function checkScreen() {
                 color: '#111',
                 fontFamily: 'Roboto-Regular',
               }}>
-              bluetooth Access
+              Bluetooth Access
             </Text>
             <FontAwesomeIcon icon={faCircleCheck} size={30} color="#73be73" />
           </View>
