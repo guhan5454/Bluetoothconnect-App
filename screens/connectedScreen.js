@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
   StatusBar,
   Platform,
+  NativeEventEmitter,
+  NativeModules,
 } from 'react-native';
 import {
   faCircleStop,
@@ -23,8 +25,12 @@ import LinearGradient from 'react-native-linear-gradient';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { AppContext } from '../Context/Context';
 
+const BleManagerModule = NativeModules.BleManager;
+const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
+
 const ConnectedScreen = () => {
   const { isConnected, setIsConnected } = useContext(AppContext);
+  const [status, setStatus] = useState(false);
 
   const [buttonState, setButtonState] = useState({
     tempup: 0.85,
@@ -43,6 +49,7 @@ const ConnectedScreen = () => {
   //checks the state of bluetooth
   useEffect(() => {
     BluetoothStateManager.onStateChange(bluetoothState => {
+      // console.log('BluetoothState: ', bluetoothState);
       switch (bluetoothState) {
         case 'PoweredOn':
           setIsConnected(prev => {
@@ -66,6 +73,27 @@ const ConnectedScreen = () => {
       }
     }, true /*=emitCurrentState*/);
   }, [isConnected['bluetooth']]);
+
+  useEffect(() => {
+    // Listen for disconnection events
+    const disconnectionListener = BleManagerEmitter.addListener(
+      'BleManagerDisconnectPeripheral',
+      ({ peripheral }) => {
+        // console.log('Peripheral disconnected:', peripheral);
+        ToastAndroid.show(`Device Disconnected`, 1000);
+        setIsConnected(prev => {
+          return {
+            ...prev,
+            connection: false,
+          };
+        });
+      },
+    );
+    return () => {
+      // Clean up the listener when the component unmounts
+      disconnectionListener.remove();
+    };
+  }, [isConnected['connection']]);
 
   const disconnectDevice = () => {
     BleManager.disconnect('64:E8:33:DA:B9:26')
@@ -91,8 +119,8 @@ const ConnectedScreen = () => {
       });
   };
 
-  const sendDataToESP32 = (str, key) => {
-    updatedState = {
+  const sendDataToESP32 = async (str, key) => {
+    var updatedState = {
       tempup: 0.85,
       tempdown: 0.85,
       tempstop: 0.85,
@@ -110,43 +138,44 @@ const ConnectedScreen = () => {
         ToastAndroid.show('Button already pressed', 3000);
       }
     } else {
+      //to pop up the currently pressed button
       updatedState[key] = 1;
       setButtonState(updatedState);
 
       const str1 = str;
       const data = str1.charCodeAt(0); //converts to ASCII
-      console.log(data);
-
-      BleManager.write(
-        '64:E8:33:DA:B9:26',
-        '2e83cb78-c55e-4172-a529-e9597e98aa53',
-        'f101a3de-99aa-4375-bc5d-8e58679e267c',
-        [data],
-      )
-        .then(() => {
-          console.log('Write: ' + data);
-          if (Platform.OS === 'android') {
-            ToastAndroid.show('Message sent', 3000);
-          }
-        })
-        .catch(error => {
-          console.log('Write error:', error);
-          Alert.alert('Message Not Sent', `${error}`, [
-            { text: 'OK', onPress: () => console.log('alert closed') },
-          ]);
-        });
+      // console.log(data);
+      try {
+        await BleManager.write(
+          '64:E8:33:DA:B9:26',
+          '2e83cb78-c55e-4172-a529-e9597e98aa53',
+          'f101a3de-99aa-4375-bc5d-8e58679e267c',
+          [data],
+        );
+        console.log('Write: ' + data);
+        // updatedState[key] = 0.85;
+        // setButtonState(updatedState);
+        if (Platform.OS === 'android') {
+          ToastAndroid.show('Message sent', 3000);
+        }
+      } catch (error) {
+        console.log('Write error:', error);
+        Alert.alert('Message Not Sent', `${error}`, [
+          { text: 'OK', onPress: () => console.log('alert closed') },
+        ]);
+      }
     }
   };
 
   return (
     <View style={styles.mainBody}>
-      <StatusBar hidden={true} />
       <LinearGradient
         style={styles.titleContainer}
         colors={['#f0b52b', '#e67446']}
         locations={[0, 1]}
         start={{ x: 1, y: 0 }}
         end={{ x: 0, y: 1 }}>
+        <StatusBar translucent={true} backgroundColor={'transparent'} />
         <Image source={require('../assets/logo.png')} style={styles.logo} />
       </LinearGradient>
       <View style={styles.bodyContainer}>

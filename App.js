@@ -27,16 +27,8 @@ const MainNavigator = () => {
   useEffect(() => {
     checkStoredCredentials();
   }, []);
-  
-  return isLoggedIn ? (
-    isConnected['connection'] ? (
-      <ConnectedScreen />
-    ) : (
-      <ConnectingScreen />
-    )
-  ) : (
-    <LoginScreen />
-  );
+
+  return isLoggedIn ? isConnected['connection'] ? <ConnectedScreen /> : <ConnectingScreen /> : <LoginScreen />;
 };
 
 export default function App() {
