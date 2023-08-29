@@ -6,7 +6,7 @@ export const AppProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [isConnected, setIsConnected] = useState({
-    connection: false,
+    connection: true,
     bluetooth: false,
     ble: false,
     permission: false,

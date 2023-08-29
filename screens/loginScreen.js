@@ -1,5 +1,16 @@
 import React, { useState, useContext, useRef } from 'react';
-import { Text, View, StyleSheet, Alert, Image, TouchableOpacity, StatusBar, TextInput, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Alert,
+  Image,
+  TouchableOpacity,
+  StatusBar,
+  TextInput,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { faLock, faUnlock } from '@fortawesome/free-solid-svg-icons';
@@ -30,7 +41,9 @@ export default function checkScreen() {
       setIsLoggedIn(true);
       console.log('done saving');
     } else {
-      Alert.alert('Invalid Login Credential', 'Try Again', [{ text: 'OK', onPress: () => console.log('alert clossed') }]);
+      Alert.alert('Invalid Login Credential', 'Try Again', [
+        { text: 'OK', onPress: () => console.log('alert clossed') },
+      ]);
     }
   }
 
@@ -40,7 +53,12 @@ export default function checkScreen() {
         onPress={() => {
           Keyboard.dismiss();
         }}>
-        <LinearGradient colors={['#f0b52b', '#e67446']} locations={[0, 0.9]} start={{ x: 1, y: 0 }} end={{ x: 0.5, y: 0.5 }} style={styles.Container}>
+        <LinearGradient
+          colors={['#f0b52b', '#e67446']}
+          locations={[0, 0.9]}
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0.5, y: 0.5 }}
+          style={styles.Container}>
           <StatusBar translucent={true} backgroundColor={'transparent'} />
           <View style={styles.TitleContainer}>
             <Image source={require('../assets/logo.png')} style={styles.imageStyle} />
@@ -160,6 +178,7 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     color: '#000',
     fontSize: 15.5,
+    // marginBottom:100
   },
   ButtonContainer: {
     opacity: 0.9,
@@ -168,7 +187,6 @@ const styles = StyleSheet.create({
     borderRadius: 13,
     width: '90%',
     height: 55,
-
     marginTop: '30%',
   },
   Button: {
