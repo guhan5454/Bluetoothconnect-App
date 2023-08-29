@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 import { AppContext, AppProvider } from './Context/Context';
 import ConnectedScreen from './screens/connectedScreen';
 import ConnectingScreen from './screens/checkScreen';
@@ -20,9 +21,36 @@ const MainNavigator = () => {
       }
     } catch (e) {
       // error reading value
-      console.log('error fetching: ', e);
+      // console.log('error fetching: ', e);
     }
   };
+  useEffect(() => {
+    //checks for bluetooth changes
+    BluetoothStateManager.onStateChange(bluetoothState => {
+      switch (bluetoothState) {
+        case 'PoweredOn':
+          setIsConnected(prev => {
+            return {
+              ...prev,
+              enableBluetooth: true,
+            };
+          });
+          break;
+        case 'PoweredOff':
+          console.log('powered Off');
+          setIsConnected(prev => {
+            return {
+              ...prev,
+              connection: false,
+              enableBluetooth: false,
+            };
+          });
+          break;
+        default:
+          break;
+      }
+    }, true /*=emitCurrentState*/);
+  }, [isConnected['enableBluetooth']]);
 
   useEffect(() => {
     checkStoredCredentials();

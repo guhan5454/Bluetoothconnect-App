@@ -28,10 +28,10 @@ export default function checkScreen() {
     try {
       const jsonValue = JSON.stringify({ id: username, pass: password });
       await AsyncStorage.setItem('login-key', jsonValue);
-      console.log('done');
+      // console.log('done');
     } catch (e) {
       // saving error
-      console.log('saving error');
+      // console.log('saving error');
     }
   };
 
@@ -39,7 +39,7 @@ export default function checkScreen() {
     if (username.trim() == 'swarnamandhir' && password == 'admin') {
       storeData(username.trim(), password);
       setIsLoggedIn(true);
-      console.log('done saving');
+      // console.log('done saving');
     } else {
       Alert.alert('Invalid Login Credential', 'Try Again', [
         { text: 'OK', onPress: () => console.log('alert clossed') },

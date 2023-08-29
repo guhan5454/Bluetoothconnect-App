@@ -15,7 +15,6 @@ import {
 } from 'react-native';
 import { faCircleStop, faCircleLeft, faCircleRight, faCircleUp, faCircleDown } from '@fortawesome/free-solid-svg-icons';
 import BleManager from 'react-native-ble-manager';
-import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 import LinearGradient from 'react-native-linear-gradient';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { AppContext } from '../Context/Context';
@@ -24,7 +23,7 @@ const BleManagerModule = NativeModules.BleManager;
 const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 const ConnectedScreen = () => {
-  const { isConnected, setIsConnected } = useContext(AppContext);
+  const { isConnected, setIsConnected, deviceId, setDeviceId } = useContext(AppContext);
   const [pass, setPass] = useState('');
   const [isLocked, setIsLocked] = useState(true);
 
@@ -42,39 +41,11 @@ const ConnectedScreen = () => {
     allon: 0.85,
   });
 
-  //checks the state of bluetooth
-  useEffect(() => {
-    BluetoothStateManager.onStateChange(bluetoothState => {
-      // console.log('BluetoothState: ', bluetoothState);
-      switch (bluetoothState) {
-        case 'PoweredOn':
-          setIsConnected(prev => {
-            return {
-              ...prev,
-              bluetooth: true,
-            };
-          });
-          break;
-        case 'PoweredOff':
-          setIsConnected(prev => {
-            return {
-              ...prev,
-              connection: false,
-              bluetooth: false,
-            };
-          });
-          break;
-        default:
-          break;
-      }
-    }, true /*=emitCurrentState*/);
-  }, [isConnected['bluetooth']]);
-
   useEffect(() => {
     // Listen for disconnection events
     const disconnectionListener = BleManagerEmitter.addListener('BleManagerDisconnectPeripheral', ({ peripheral }) => {
       // console.log('Peripheral disconnected:', peripheral);
-      ToastAndroid.show(`Device Disconnected`, 1000);
+      ToastAndroid.show(`Device Disconnected`, 500);
       setIsConnected(prev => {
         return {
           ...prev,
@@ -89,13 +60,9 @@ const ConnectedScreen = () => {
   }, [isConnected['connection']]);
 
   const disconnectDevice = () => {
-    BleManager.disconnect('64:E8:33:DA:B9:26')
+    BleManager.disconnect(deviceId)
       .then(() => {
         // Success code
-        console.log('Disconnected');
-        if (Platform.OS === 'android') {
-          ToastAndroid.show('Disconnected', 1000);
-        }
         setIsConnected(prev => {
           return {
             ...prev,
@@ -105,8 +72,15 @@ const ConnectedScreen = () => {
       })
       .catch(error => {
         // Failure code
-        console.log(error);
-        Alert.alert("Couldn't Disconnect", `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
+        // console.log(error);
+        Alert.alert("Couldn't Disconnect", `${error}`, [
+          {
+            text: 'OK',
+            onPress: () => {
+              // console.log('alert closed');
+            },
+          },
+        ]);
       });
   };
 
@@ -115,7 +89,14 @@ const ConnectedScreen = () => {
       setIsLocked(false);
     } else {
       setPass('');
-      Alert.alert('Invalid PIN', 'Try Again', [{ text: 'OK', onPress: () => console.log('alert closed') }]);
+      Alert.alert('Invalid PIN', 'Try Again', [
+        {
+          text: 'OK',
+          onPress: () => {
+            // console.log('alert closed');
+          },
+        },
+      ]);
     }
   };
 
@@ -147,20 +128,24 @@ const ConnectedScreen = () => {
       // console.log(data);
       try {
         await BleManager.write(
-          '64:E8:33:DA:B9:26',
+          deviceId,
           '2e83cb78-c55e-4172-a529-e9597e98aa53',
           'f101a3de-99aa-4375-bc5d-8e58679e267c',
           [data],
         );
-        console.log('Write: ' + data);
-        // updatedState[key] = 0.85;
-        // setButtonState(updatedState);
         if (Platform.OS === 'android') {
           ToastAndroid.show('Message sent', 3000);
         }
       } catch (error) {
-        console.log('Write error:', error);
-        Alert.alert('Message Not Sent', `${error}`, [{ text: 'OK', onPress: () => console.log('alert closed') }]);
+        // console.log('Write error:', error);
+        Alert.alert('Message Not Sent', `${error}`, [
+          {
+            text: 'OK',
+            onPress: () => {
+              // console.log('alert closed');
+            },
+          },
+        ]);
       }
     }
   };
@@ -470,7 +455,7 @@ const styles = StyleSheet.create({
     height: '66%',
     borderWidth: 3,
     borderColor: '#f0b52b',
-    justifyContent:'center',
+    justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 20,
   },
