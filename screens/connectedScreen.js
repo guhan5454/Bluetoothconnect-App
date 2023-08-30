@@ -87,6 +87,7 @@ const ConnectedScreen = () => {
   const passHandler = () => {
     if (pass === '2023') {
       setIsLocked(false);
+      setPass('');
     } else {
       setPass('');
       Alert.alert('Invalid PIN', 'Try Again', [
@@ -194,9 +195,9 @@ const ConnectedScreen = () => {
         </View>
         {isLocked ? (
           <View style={styles.lockContainer}>
-            <Text style={styles.pinText}>Enter PIN to Unlock</Text>
+            <Text style={styles.pinText}>Admin Panel</Text>
             <TextInput
-              placeholder="PIN"
+              placeholder="Enter PIN"
               placeholderTextColor={'#434242'}
               cursorColor={'#434242'}
               keyboardType="numeric"
@@ -215,7 +216,7 @@ const ConnectedScreen = () => {
             <View style={styles.heading}>
               <Text style={styles.switchTxt}>Temple Switch</Text>
             </View>
-            <View style={[styles.actionCard, { backgroundColor: '#fff' }]}>
+            <View style={styles.actionCard}>
               <View style={styles.buttonPack}>
                 <TouchableOpacity
                   onPress={() => sendDataToESP32('U', 'tempup')}
@@ -252,7 +253,7 @@ const ConnectedScreen = () => {
             <View style={styles.heading}>
               <Text style={styles.switchTxt}>Arch Switch</Text>
             </View>
-            <View style={[styles.actionCard, { backgroundColor: '#fff' }]}>
+            <View style={styles.actionCard}>
               <View style={styles.buttonPack}>
                 <TouchableOpacity
                   onPress={() => sendDataToESP32('T', 'archtop')}
@@ -289,7 +290,7 @@ const ConnectedScreen = () => {
             <View style={styles.heading}>
               <Text style={styles.switchTxt}>Lotus Switch</Text>
             </View>
-            <View style={[styles.actionCard, { backgroundColor: '#fff' }]}>
+            <View style={styles.actionCard}>
               <View style={styles.buttonPack}>
                 <TouchableOpacity
                   onPress={() => sendDataToESP32('O', 'lotusopen')}
@@ -323,6 +324,9 @@ const ConnectedScreen = () => {
                 </TouchableOpacity>
               </View>
             </View>
+            <TouchableOpacity style={styles.adminTextContainer} onPress={() => {setIsLocked(true)}}>
+              <Text style={styles.adminTxt}>Close Admin Panel</Text>
+            </TouchableOpacity>
           </>
         )}
         <TouchableOpacity
@@ -397,7 +401,7 @@ const styles = StyleSheet.create({
     color: '#111',
     fontSize: 20,
     fontFamily: 'Roboto-Regular',
-    marginVertical: '4%',
+    marginVertical: '2%',
   },
   buttonPack: {
     flexDirection: 'row',
@@ -411,7 +415,7 @@ const styles = StyleSheet.create({
     opacity: 0.9,
     elevation: 4,
     height: '10%',
-    marginTop: '6%',
+    marginTop: '4%',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 20,
@@ -452,9 +456,9 @@ const styles = StyleSheet.create({
     marginTop: '1%',
     backgroundColor: '#FFF',
     width: '90%',
-    height: '66%',
-    borderWidth: 3,
-    borderColor: '#f0b52b',
+    height: '70.3%',
+    // borderWidth: 3,
+    // borderColor: '#f0b52b',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 20,
@@ -467,12 +471,26 @@ const styles = StyleSheet.create({
   TxtInput: {
     marginTop: '4%',
     color: 'black',
-    borderColor: 'lightgrey',
+    borderColor: '#f0b52b',
     height: 58,
     width: '85%',
     paddingLeft: '6%',
-    borderWidth: 3,
-    borderRadius: 20,
+    borderWidth: 2.5,
+    borderRadius: 18,
+  },
+  adminTextContainer: {
+    // backgroundColor: 'black',
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '50%',
+    height: '10%',
+    marginTop: '2%',
+  },
+  adminTxt: {
+    color: '#e67446',
+    fontSize: 19,
+    fontWeight: '700',
   },
 });
 
