@@ -42,7 +42,7 @@ export default function checkScreen() {
       // console.log('done saving');
     } else {
       Alert.alert('Invalid Login Credential', 'Try Again', [
-        { text: 'OK', onPress: () => console.log('alert clossed') },
+        { text: 'OK', onPress: () => console.log('alert closed') },
       ]);
     }
   }
