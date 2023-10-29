@@ -85,7 +85,7 @@ const ConnectedScreen = () => {
   };
 
   const passHandler = () => {
-    if (pass === '2023') {
+    if (pass === '1984') {
       setIsLocked(false);
       setPass('');
     } else {
